@@ -1,0 +1,58 @@
+{
+    "name": "zendframework/zend-expressive-authentication-session",
+    "description": "<package description; should match repository description>",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "expressive",
+        "zf",
+        "zendframework",
+        "<individual keywords for current package>"
+    ],
+    "support": {
+        "docs": "https://docs.zendframework.com/zend-expressive-authentication-session/",
+        "issues": "https://github.com/zendframework/zend-expressive-authentication-session/issues",
+        "source": "https://github.com/zendframework/zend-expressive-authentication-session",
+        "rss": "https://github.com/zendframework/zend-expressive-authentication-session/releases.atom",
+        "slack": "https://zendframework-slack.herokuapp.com",
+        "forum": "https://discourse.zendframework.com/c/questions/expressive"
+    },
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.3",
+        "zendframework/zend-coding-standard": "~1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zend\\Expressive\\Authentication\\Session\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZendTest\\Expressive\\Authentication\\Session\\": "test/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        },
+        "zf": {
+            "config-provider": "Zend\\Expressive\\Authentication\\Session\\ConfigProvider"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "upload-coverage": "coveralls -v"
+    }
+}
