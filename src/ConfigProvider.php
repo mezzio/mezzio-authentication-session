@@ -12,13 +12,26 @@ class ConfigProvider
     public function __invoke() : array
     {
         return [
+            'authentication' => $this->getAuthenticationConfig(),
             'dependencies' => $this->getDependencies(),
+        ];
+    }
+
+    public function getAuthenticationConfig() : array
+    {
+        return [
+            'username' => '', // provide a custom field name for the username
+            'password' => '', // provide a custom field name for the password
+            'redirect' => '', // URI to which to redirect if no valid credentials present
         ];
     }
 
     public function getDependencies() : array
     {
         return [
+            'factories' => [
+                PhpSession::class => PhpSessionFactory::class,
+            ],
         ];
     }
 }
