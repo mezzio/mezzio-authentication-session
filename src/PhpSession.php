@@ -12,6 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
+use Zend\Expressive\Session\SessionMiddleware;
 
 class PhpSession implements AuthenticationInterface
 {
@@ -53,14 +54,14 @@ class PhpSession implements AuthenticationInterface
      */
     public function authenticate(ServerRequestInterface $request) : ?UserInterface
     {
-        $cookies = $request->getCookieParams();
-        if (isset($cookies[AuthenticationInterface::class])) {
-            $this->setSessionId($cookies[AuthenticationInterface::class]);
-            if (isset($_SESSION[UserInterface::class]) &&
-                $_SESSION[UserInterface::class] instanceof UserInterface) {
-                return $_SESSION[UserInterface::class];
-            }
-            return null;
+        $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
+        if (! $session) {
+            throw Exception\MissingSessionContainerException::create();
+        }
+
+        if ($session->has(UserInterface::class)) {
+            $user = $session->get(UserInterface::class);
+            return $user instanceof UserInterface ? $user : null;
         }
 
         if ('POST' !== strtoupper($request->getMethod())) {
@@ -70,7 +71,7 @@ class PhpSession implements AuthenticationInterface
         $params = $request->getParsedBody();
         $username = $this->config['username'] ?? 'username';
         $password = $this->config['password'] ?? 'password';
-        if (!isset($params[$username]) || !isset($params[$password])) {
+        if (! isset($params[$username]) || ! isset($params[$password])) {
             return null;
         }
 
@@ -80,8 +81,8 @@ class PhpSession implements AuthenticationInterface
         );
 
         if (null !== $user) {
-            $this->setSessionId(bin2hex(random_bytes(20)));
-            $_SESSION[UserInterface::class] = $user;
+            $session->set(UserInterface::class, $user);
+            $session->regenerate();
         }
 
         return $user;
@@ -92,22 +93,11 @@ class PhpSession implements AuthenticationInterface
      */
     public function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->responsePrototype->withHeader(
-            'Location',
-            $this->config['redirect']
-        )->withStatus(301);
-    }
-
-    /**
-     * Set the PHP SESSION ID
-     *
-     * @param string $id
-     * @return void
-     */
-    private function setSessionId(string $id): void
-    {
-        session_name(AuthenticationInterface::class);
-        session_id($id);
-        session_start();
+        return $this->responsePrototype
+            ->withHeader(
+                'Location',
+                $this->config['redirect']
+            )
+            ->withStatus(301);
     }
 }
