@@ -25,6 +25,7 @@
         "zendframework/zend-expressive-session": "^0.1.0"
     },
     "require-dev": {
+        "phpspec/prophecy": "^1.7.2",
         "phpunit/phpunit": "^6.3",
         "zendframework/zend-coding-standard": "~1.0.0"
     },
