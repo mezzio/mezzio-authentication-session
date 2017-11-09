@@ -1,12 +1,13 @@
 {
     "name": "zendframework/zend-expressive-authentication-session",
-    "description": "<package description; should match repository description>",
+    "description": "Username/password, session-backed authentication adapter for zend-expressive-authentication.",
     "license": "BSD-3-Clause",
     "keywords": [
         "expressive",
         "zf",
         "zendframework",
-        "<individual keywords for current package>"
+        "authentication",
+        "session"
     ],
     "support": {
         "docs": "https://docs.zendframework.com/zend-expressive-authentication-session/",
