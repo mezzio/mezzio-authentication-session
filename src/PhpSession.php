@@ -14,6 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
+use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Session\SessionMiddleware;
 
 class PhpSession implements AuthenticationInterface
@@ -62,8 +63,7 @@ class PhpSession implements AuthenticationInterface
         }
 
         if ($session->has(UserInterface::class)) {
-            $user = $session->get(UserInterface::class);
-            return $user instanceof UserInterface ? $user : null;
+            return $this->createUserFromSession($session);
         }
 
         if ('POST' !== strtoupper($request->getMethod())) {
@@ -83,7 +83,10 @@ class PhpSession implements AuthenticationInterface
         );
 
         if (null !== $user) {
-            $session->set(UserInterface::class, $user);
+            $session->set(UserInterface::class, [
+                'username' => $user->getUsername(),
+                'role' => $user->getUserRole(),
+            ]);
             $session->regenerate();
         }
 
@@ -101,5 +104,42 @@ class PhpSession implements AuthenticationInterface
                 $this->config['redirect']
             )
             ->withStatus(301);
+    }
+
+    /**
+     * Create a UserInterface instance from the session data.
+     *
+     * zend-expressive-session does not serialize PHP objects directly. As such,
+     * we need to create a UserInterface instance based on the data stored in
+     * the session instead.
+     */
+    private function createUserFromSession(SessionInterface $session) : ?UserInterface
+    {
+        $userInfo = $session->get(UserInterface::class);
+        if (! is_array($userInfo) || ! isset($userInfo['username'])) {
+            return null;
+        }
+
+        return new class ($userInfo) implements UserInterface {
+            private $role;
+
+            private $username;
+
+            public function __construct(array $userInfo)
+            {
+                $this->username = $userInfo['username'];
+                $this->role = $userInfo['role'] ?? '';
+            }
+
+            public function getUsername() : string
+            {
+                return $this->username;
+            }
+
+            public function getUserRole() : string
+            {
+                return $this->role;
+            }
+        };
     }
 }
