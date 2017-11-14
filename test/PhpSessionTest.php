@@ -94,7 +94,10 @@ class PhpSessionTest extends TestCase
             ->has(UserInterface::class)
             ->willReturn(false);
         $this->session
-            ->set(UserInterface::class, Argument::type(UserInterface::class))
+            ->set(UserInterface::class, [
+                'username' => 'vimes',
+                'role' => 'captain',
+            ])
             ->shouldBeCalled();
         $this->session
             ->regenerate()
@@ -106,6 +109,9 @@ class PhpSessionTest extends TestCase
             'username' => 'foo',
             'password' => 'bar'
         ]);
+
+        $this->authenticatedUser->getUsername()->willReturn('vimes');
+        $this->authenticatedUser->getUserRole()->willReturn('captain');
 
         $this->userRegister
             ->authenticate('foo', 'bar')
@@ -119,7 +125,7 @@ class PhpSessionTest extends TestCase
 
         $result = $phpSession->authenticate($this->request->reveal());
 
-        $this->assertInstanceOf(UserInterface::class, $result);
+        $this->assertSame($this->authenticatedUser->reveal(), $result);
     }
 
     public function testAuthenticationWithNoSessionUserViaPostWithCustomFieldsCanHaveSuccessfulResult()
@@ -128,7 +134,10 @@ class PhpSessionTest extends TestCase
             ->has(UserInterface::class)
             ->willReturn(false);
         $this->session
-            ->set(UserInterface::class, Argument::type(UserInterface::class))
+            ->set(UserInterface::class, [
+                'username' => 'foo',
+                'role' => '',
+            ])
             ->shouldBeCalled();
         $this->session
             ->regenerate()
@@ -143,7 +152,10 @@ class PhpSessionTest extends TestCase
 
         $this->userRegister
             ->authenticate('foo', 'bar')
-            ->willReturn($this->authenticatedUser->reveal());
+            ->will([$this->authenticatedUser, 'reveal']);
+
+        $this->authenticatedUser->getUsername()->willReturn('foo');
+        $this->authenticatedUser->getUserRole()->willReturn('');
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
@@ -156,7 +168,7 @@ class PhpSessionTest extends TestCase
 
         $result = $phpSession->authenticate($this->request->reveal());
 
-        $this->assertInstanceOf(UserInterface::class, $result);
+        $this->assertSame($this->authenticatedUser->reveal(), $result);
     }
 
     public function testCanAuthenticateUserProvidedViaSession()
@@ -166,7 +178,10 @@ class PhpSessionTest extends TestCase
             ->willReturn(true);
         $this->session
             ->get(UserInterface::class)
-            ->will([$this->authenticatedUser, 'reveal']);
+            ->willReturn([
+                'username' => 'vimes',
+                'role' => 'captain',
+            ]);
 
         $this->request->getAttribute('session')->will([$this->session, 'reveal']);
 
@@ -179,6 +194,8 @@ class PhpSessionTest extends TestCase
         $result = $phpSession->authenticate($this->request->reveal());
 
         $this->assertInstanceOf(UserInterface::class, $result);
+        $this->assertSame('vimes', $result->getUsername());
+        $this->assertSame('captain', $result->getUserRole());
     }
 
     public function testAuthenticationWhenSessionUserIsOfIncorrectTypeResultsInUnsuccessfulAuthentication()
