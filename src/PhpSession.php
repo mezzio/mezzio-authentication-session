@@ -85,7 +85,7 @@ class PhpSession implements AuthenticationInterface
         if (null !== $user) {
             $session->set(UserInterface::class, [
                 'username' => $user->getUsername(),
-                'role' => $user->getUserRole(),
+                'roles' => $user->getUserRoles(),
             ]);
             $session->regenerate();
         }
@@ -121,14 +121,15 @@ class PhpSession implements AuthenticationInterface
         }
 
         return new class ($userInfo) implements UserInterface {
-            private $role;
+            private $roles;
 
             private $username;
 
             public function __construct(array $userInfo)
             {
                 $this->username = $userInfo['username'];
-                $this->role = $userInfo['role'] ?? '';
+                $roles = $userInfo['roles'] ?? [];
+                $this->roles = (array) $roles;
             }
 
             public function getUsername() : string
@@ -136,9 +137,9 @@ class PhpSession implements AuthenticationInterface
                 return $this->username;
             }
 
-            public function getUserRole() : string
+            public function getUserRoles() : array
             {
-                return $this->role;
+                return $this->roles;
             }
         };
     }

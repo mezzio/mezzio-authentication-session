@@ -96,7 +96,7 @@ class PhpSessionTest extends TestCase
         $this->session
             ->set(UserInterface::class, [
                 'username' => 'vimes',
-                'role' => 'captain',
+                'roles' => ['captain'],
             ])
             ->shouldBeCalled();
         $this->session
@@ -111,7 +111,7 @@ class PhpSessionTest extends TestCase
         ]);
 
         $this->authenticatedUser->getUsername()->willReturn('vimes');
-        $this->authenticatedUser->getUserRole()->willReturn('captain');
+        $this->authenticatedUser->getUserRoles()->willReturn(['captain']);
 
         $this->userRegister
             ->authenticate('foo', 'bar')
@@ -136,7 +136,7 @@ class PhpSessionTest extends TestCase
         $this->session
             ->set(UserInterface::class, [
                 'username' => 'foo',
-                'role' => '',
+                'roles' => [],
             ])
             ->shouldBeCalled();
         $this->session
@@ -147,7 +147,7 @@ class PhpSessionTest extends TestCase
         $this->request->getMethod()->willReturn('POST');
         $this->request->getParsedBody()->willReturn([
             'user' => 'foo',
-            'pass' => 'bar'
+            'pass' => 'bar',
         ]);
 
         $this->userRegister
@@ -155,13 +155,13 @@ class PhpSessionTest extends TestCase
             ->will([$this->authenticatedUser, 'reveal']);
 
         $this->authenticatedUser->getUsername()->willReturn('foo');
-        $this->authenticatedUser->getUserRole()->willReturn('');
+        $this->authenticatedUser->getUserRoles()->willReturn([]);
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             [
                 'username' => 'user',
-                'password' => 'pass'
+                'password' => 'pass',
             ],
             $this->responsePrototype->reveal()
         );
@@ -180,7 +180,7 @@ class PhpSessionTest extends TestCase
             ->get(UserInterface::class)
             ->willReturn([
                 'username' => 'vimes',
-                'role' => 'captain',
+                'roles' => ['captain'],
             ]);
 
         $this->request->getAttribute('session')->will([$this->session, 'reveal']);
@@ -195,7 +195,7 @@ class PhpSessionTest extends TestCase
 
         $this->assertInstanceOf(UserInterface::class, $result);
         $this->assertSame('vimes', $result->getUsername());
-        $this->assertSame('captain', $result->getUserRole());
+        $this->assertSame(['captain'], $result->getUserRoles());
     }
 
     public function testAuthenticationWhenSessionUserIsOfIncorrectTypeResultsInUnsuccessfulAuthentication()
