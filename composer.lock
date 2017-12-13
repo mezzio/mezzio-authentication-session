@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "97e31d4eb68df0a5734e38ee10844b92",
+    "content-hash": "f677f73bade7f2a70902fdbc28392514",
     "packages": [
         {
             "name": "http-interop/http-middleware",
@@ -1846,7 +1846,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "zendframework/zend-expressive-authentication": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
