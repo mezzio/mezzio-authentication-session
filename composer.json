@@ -22,7 +22,7 @@
         "psr/container": "^1.0",
         "psr/http-message": "^1.0.1",
         "zendframework/zend-expressive-authentication": "^0.2 || ^1.0.0-dev || ^1.0",
-        "zendframework/zend-expressive-session": "^0.1.0"
+        "zendframework/zend-expressive-session": "^0.1.0 || ^1.0.0-dev || ^1.0"
     },
     "require-dev": {
         "phpspec/prophecy": "^1.7.2",
