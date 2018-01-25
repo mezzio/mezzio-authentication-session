@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.3.0 - 2018-01-25
+
+### Added
+
+- [#6](https://github.com/zendframework/zend-expressive-authentication-session/pull/6)
+  adds support for zend-expressive-authentication-session 0.3.0.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- [#6](https://github.com/zendframework/zend-expressive-authentication-session/pull/6)
+  drops support for zend-expressive-authentication-session versions less than 0.3.0.
+
+### Fixed
+
+- Nothing.
+
 ## 0.2.2 - 2018-01-08
 
 ### Added

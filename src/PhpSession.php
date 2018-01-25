@@ -13,12 +13,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Authentication\UserInterface;
+use Zend\Expressive\Authentication\UserRepository\UserTrait;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Session\SessionMiddleware;
 
 class PhpSession implements AuthenticationInterface
 {
+    use UserTrait;
+
     /**
      * @var UserRepositoryInterface
      */
@@ -84,7 +87,7 @@ class PhpSession implements AuthenticationInterface
 
         if (null !== $user) {
             $session->set(UserInterface::class, [
-                'username' => $user->getUsername(),
+                'username' => $user->getIdentity(),
                 'roles' => $user->getUserRoles(),
             ]);
             $session->regenerate();
@@ -119,28 +122,8 @@ class PhpSession implements AuthenticationInterface
         if (! is_array($userInfo) || ! isset($userInfo['username'])) {
             return null;
         }
+        $roles = $userInfo['roles'] ?? [];
 
-        return new class ($userInfo) implements UserInterface {
-            private $roles;
-
-            private $username;
-
-            public function __construct(array $userInfo)
-            {
-                $this->username = $userInfo['username'];
-                $roles = $userInfo['roles'] ?? [];
-                $this->roles = (array) $roles;
-            }
-
-            public function getUsername() : string
-            {
-                return $this->username;
-            }
-
-            public function getUserRoles() : array
-            {
-                return $this->roles;
-            }
-        };
+        return $this->generateUser($userInfo['username'], (array) $roles);
     }
 }

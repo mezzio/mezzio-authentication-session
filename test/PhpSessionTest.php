@@ -110,7 +110,7 @@ class PhpSessionTest extends TestCase
             'password' => 'bar'
         ]);
 
-        $this->authenticatedUser->getUsername()->willReturn('vimes');
+        $this->authenticatedUser->getIdentity()->willReturn('vimes');
         $this->authenticatedUser->getUserRoles()->willReturn(['captain']);
 
         $this->userRegister
@@ -154,7 +154,7 @@ class PhpSessionTest extends TestCase
             ->authenticate('foo', 'bar')
             ->will([$this->authenticatedUser, 'reveal']);
 
-        $this->authenticatedUser->getUsername()->willReturn('foo');
+        $this->authenticatedUser->getIdentity()->willReturn('foo');
         $this->authenticatedUser->getUserRoles()->willReturn([]);
 
         $phpSession = new PhpSession(
@@ -194,7 +194,7 @@ class PhpSessionTest extends TestCase
         $result = $phpSession->authenticate($this->request->reveal());
 
         $this->assertInstanceOf(UserInterface::class, $result);
-        $this->assertSame('vimes', $result->getUsername());
+        $this->assertSame('vimes', $result->getIdentity());
         $this->assertSame(['captain'], $result->getUserRoles());
     }
 
