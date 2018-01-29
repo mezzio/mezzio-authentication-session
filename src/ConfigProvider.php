@@ -22,8 +22,8 @@ class ConfigProvider
     public function getAuthenticationConfig() : array
     {
         return [
-            'username' => 'username', // provide a custom field name for the username
-            'password' => 'password', // provide a custom field name for the password
+            'username' => null, // provide a custom field name for the username
+            'password' => null, // provide a custom field name for the password
             'redirect' => '', // URI to which to redirect if no valid credentials present
         ];
     }
