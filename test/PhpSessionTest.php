@@ -2,7 +2,7 @@
 /**
  * @see https://github.com/zendframework/zend-expressive-authentication-session
  *     for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (http://www.zend.com)
  * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
  *     New BSD License
  */
@@ -10,7 +10,7 @@
 namespace ZendTest\Expressive\Authentication\Session;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
@@ -23,6 +23,21 @@ use Zend\Expressive\Session\SessionInterface;
 
 class PhpSessionTest extends TestCase
 {
+    /** @var ServerRequestInterface|ObjectProphecy */
+    private $request;
+
+    /** @var UserRepositoryInterface|ObjectProphecy */
+    private $userRegister;
+
+    /** @var UserInterface|ObjectProphecy */
+    private $authenticatedUser;
+
+    /** @var ResponseInterface|ObjectProphecy */
+    private $responsePrototype;
+
+    /** @var SessionInterface|ObjectProphecy */
+    private $session;
+
     protected function setUp()
     {
         $this->request = $this->prophesize(ServerRequestInterface::class);

@@ -2,7 +2,7 @@
 /**
  * @see https://github.com/zendframework/zend-expressive-authentication-session
  *     for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (http://www.zend.com)
  * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
  *     New BSD License
  */
@@ -10,34 +10,44 @@
 namespace ZendTest\Expressive\Authentication\Session;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Zend\Expressive\Authentication\Exception\InvalidConfigException;
 use Zend\Expressive\Authentication\Session\PhpSession;
 use Zend\Expressive\Authentication\Session\PhpSessionFactory;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
 
 class PhpSessionFactoryTest extends TestCase
 {
+    /** @var ContainerInterface|ObjectProphecy */
+    private $container;
+
+    /** @var PhpSessionFactory */
+    private $factory;
+
+    /** @var UserRepositoryInterface|ObjectProphecy */
+    private $userRegister;
+
+    /** @var callable */
+    private $responseFactory;
+
     protected function setUp()
     {
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->factory = new PhpSessionFactory();
         $this->userRegister = $this->prophesize(UserRepositoryInterface::class);
-        $this->responsePrototype = $this->prophesize(ResponseInterface::class);
+        $this->responseFactory = function () {
+            return $this->prophesize(ResponseInterface::class)->reveal();
+        };
     }
 
-    /**
-     * @expectedException Zend\Expressive\Authentication\Exception\InvalidConfigException
-     */
     public function testInvokeWithEmptyContainer()
     {
-        $phpSession = ($this->factory)($this->container->reveal());
+        $this->expectException(InvalidConfigException::class);
+        ($this->factory)($this->container->reveal());
     }
 
-    /**
-     * @expectedException Zend\Expressive\Authentication\Exception\InvalidConfigException
-     */
     public function testInvokeWithContainerEmptyConfig()
     {
         $this->container
@@ -51,12 +61,13 @@ class PhpSessionFactoryTest extends TestCase
             ->willReturn(true);
         $this->container
             ->get(ResponseInterface::class)
-            ->willReturn($this->responsePrototype->reveal());
+            ->willReturn($this->responseFactory);
         $this->container
             ->get('config')
             ->willReturn([]);
 
-        $phpSession = ($this->factory)($this->container->reveal());
+        $this->expectException(InvalidConfigException::class);
+        ($this->factory)($this->container->reveal());
     }
 
     public function testInvokeWithContainerAndConfig()
@@ -72,7 +83,7 @@ class PhpSessionFactoryTest extends TestCase
             ->willReturn(true);
         $this->container
             ->get(ResponseInterface::class)
-            ->willReturn($this->responsePrototype->reveal());
+            ->willReturn($this->responseFactory);
         $this->container
             ->get('config')
             ->willReturn([
