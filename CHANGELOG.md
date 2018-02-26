@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.3.1 - 2018-02-26
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#7](https://github.com/zendframework/zend-expressive-authentication-session/pull/7)
+  fixes an issue with the default username and password values defined in the
+  `ConfigProvider`. Previously, these were issued as empty strings; however,
+  they needed to be `null` values to ensure lookups did not provide a false
+  positive.
+
 ## 0.3.0 - 2018-01-25
 
 ### Added

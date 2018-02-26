@@ -14,6 +14,7 @@ use Prophecy\Argument;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
+use Zend\Expressive\Authentication\Session\ConfigProvider;
 use Zend\Expressive\Authentication\Session\Exception;
 use Zend\Expressive\Authentication\Session\PhpSession;
 use Zend\Expressive\Authentication\UserInterface;
@@ -29,13 +30,14 @@ class PhpSessionTest extends TestCase
         $this->authenticatedUser = $this->prophesize(UserInterface::class);
         $this->responsePrototype = $this->prophesize(ResponseInterface::class);
         $this->session = $this->prophesize(SessionInterface::class);
+        $this->defaultConfig = (new ConfigProvider())()['authentication'];
     }
 
     public function testConstructor()
     {
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
-            [],
+            $this->defaultConfig,
             $this->responsePrototype->reveal()
         );
         $this->assertInstanceOf(AuthenticationInterface::class, $phpSession);
@@ -47,7 +49,7 @@ class PhpSessionTest extends TestCase
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
-            [],
+            $this->defaultConfig,
             $this->responsePrototype->reveal()
         );
 
@@ -64,7 +66,7 @@ class PhpSessionTest extends TestCase
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
-            [],
+            $this->defaultConfig,
             $this->responsePrototype->reveal()
         );
 
@@ -81,7 +83,7 @@ class PhpSessionTest extends TestCase
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
-            [],
+            $this->defaultConfig,
             $this->responsePrototype->reveal()
         );
 
@@ -119,7 +121,7 @@ class PhpSessionTest extends TestCase
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
-            [],
+            $this->defaultConfig,
             $this->responsePrototype->reveal()
         );
 
@@ -187,7 +189,7 @@ class PhpSessionTest extends TestCase
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
-            [],
+            $this->defaultConfig,
             $this->responsePrototype->reveal()
         );
 
@@ -212,7 +214,7 @@ class PhpSessionTest extends TestCase
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
-            [],
+            $this->defaultConfig,
             $this->responsePrototype->reveal()
         );
 
