@@ -9,10 +9,12 @@
 
 namespace ZendTest\Expressive\Authentication\Session;
 
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+use ReflectionProperty;
 use Zend\Expressive\Authentication\Exception\InvalidConfigException;
 use Zend\Expressive\Authentication\Session\PhpSession;
 use Zend\Expressive\Authentication\Session\PhpSessionFactory;
@@ -29,6 +31,9 @@ class PhpSessionFactoryTest extends TestCase
     /** @var UserRepositoryInterface|ObjectProphecy */
     private $userRegister;
 
+    /** @var ResponseInterface|ObjectProphecy */
+    private $responsePrototype;
+
     /** @var callable */
     private $responseFactory;
 
@@ -37,8 +42,9 @@ class PhpSessionFactoryTest extends TestCase
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->factory = new PhpSessionFactory();
         $this->userRegister = $this->prophesize(UserRepositoryInterface::class);
+        $this->responsePrototype = $this->prophesize(ResponseInterface::class);
         $this->responseFactory = function () {
-            return $this->prophesize(ResponseInterface::class)->reveal();
+            return $this->responsePrototype->reveal();
         };
     }
 
@@ -92,5 +98,14 @@ class PhpSessionFactoryTest extends TestCase
 
         $phpSession = ($this->factory)($this->container->reveal());
         $this->assertInstanceOf(PhpSession::class, $phpSession);
+        $this->assertResponseFactoryReturns($this->responsePrototype->reveal(), $phpSession);
+    }
+
+    public static function assertResponseFactoryReturns(ResponseInterface $expected, PhpSession $service) : void
+    {
+        $r = new ReflectionProperty($service, 'responseFactory');
+        $r->setAccessible(true);
+        $responseFactory = $r->getValue($service);
+        Assert::assertSame($expected, $responseFactory());
     }
 }

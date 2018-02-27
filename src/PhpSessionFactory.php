@@ -2,7 +2,7 @@
 /**
  * @see https://github.com/zendframework/zend-expressive-authentication-session
  *     for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (http://www.zend.com)
  * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
  *     New BSD License
  */
@@ -10,14 +10,12 @@
 namespace Zend\Expressive\Authentication\Session;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Zend\Expressive\Authentication\Exception;
-use Zend\Expressive\Authentication\ResponsePrototypeTrait;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
 
 class PhpSessionFactory
 {
-    use ResponsePrototypeTrait;
-
     public function __invoke(ContainerInterface $container): PhpSession
     {
         $userRegister = $container->has(UserRepositoryInterface::class)
@@ -41,7 +39,7 @@ class PhpSessionFactory
         return new PhpSession(
             $userRegister,
             $config,
-            $this->getResponsePrototype($container)
+            $container->get(ResponseInterface::class)
         );
     }
 }
