@@ -2,7 +2,7 @@
 /**
  * @see https://github.com/zendframework/zend-expressive-authentication-session
  *     for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (http://www.zend.com)
  * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
  *     New BSD License
  */
@@ -33,25 +33,22 @@ class PhpSession implements AuthenticationInterface
     protected $config;
 
     /**
-     * @var ResponseInterface
+     * @var callable
      */
-    protected $responsePrototype;
+    protected $responseFactory;
 
-    /**
-     * Constructor
-     *
-     * @param UserRepositoryInterface $repository
-     * @param array $config
-     * @param ResponseInterface $responsePrototype
-     */
     public function __construct(
         UserRepositoryInterface $repository,
         array $config,
-        ResponseInterface $responsePrototype
+        callable $responseFactory
     ) {
         $this->repository = $repository;
         $this->config = $config;
-        $this->responsePrototype = $responsePrototype;
+
+        // Ensures type safety of the composed factory
+        $this->responseFactory = function () use ($responseFactory) : ResponseInterface {
+            return $responseFactory();
+        };
     }
 
     /**
@@ -96,12 +93,9 @@ class PhpSession implements AuthenticationInterface
         return $user;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface
+    public function unauthorizedResponse(ServerRequestInterface $request) : ResponseInterface
     {
-        return $this->responsePrototype
+        return ($this->responseFactory)()
             ->withHeader(
                 'Location',
                 $this->config['redirect']
