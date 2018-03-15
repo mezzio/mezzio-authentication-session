@@ -18,6 +18,9 @@ use Zend\Expressive\Authentication\UserRepositoryInterface;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Session\SessionMiddleware;
 
+use function is_array;
+use function strtoupper;
+
 class PhpSession implements AuthenticationInterface
 {
     use UserTrait;
