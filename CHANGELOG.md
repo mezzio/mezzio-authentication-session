@@ -6,8 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#9](https://github.com/zendframework/zend-expressive-authentication-session/pull/9)
-  adds support for zend-expressive-authentication 1.0.0alpha3 and up.
+- Adds support for zend-expressive-authentication 0.4.0 and up.
 
 ### Changed
 
@@ -30,9 +29,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- [#9](https://github.com/zendframework/zend-expressive-authentication-session/pull/9)
-  removes support for zend-expressive-authentication versions prior to
-  1.0.0alpha3.
+- Removes support for zend-expressive-authentication versions prior to 0.4.0.
 
 ### Fixed
 
