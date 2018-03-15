@@ -2,11 +2,12 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.0.0alpha2 - 2018-02-27
+## 0.4.0 - 2018-03-15
 
 ### Added
 
-- Nothing.
+- [#9](https://github.com/zendframework/zend-expressive-authentication-session/pull/9)
+  adds support for zend-expressive-authentication 1.0.0alpha3 and up.
 
 ### Changed
 
@@ -22,29 +23,6 @@ All notable changes to this project will be documented in this file, in reverse 
   `Zend\Expressive\Authentication\ResponsePrototypeTrait`, and instead always
   depend on the `Psr\Http\Message\ResponseInterface` service to correctly return
   a PHP callable capable of producing a `ResponseInterface` instance.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 1.0.0alpha1 - 2018-02-26
-
-### Added
-
-- [#9](https://github.com/zendframework/zend-expressive-authentication-session/pull/9)
-  adds support for zend-expressive-authentication 1.0.0alpha3 and up.
-
-### Changed
-
-- Nothing.
 
 ### Deprecated
 
