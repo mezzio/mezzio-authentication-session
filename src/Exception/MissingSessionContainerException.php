@@ -13,6 +13,8 @@ use RuntimeException;
 use Zend\Expressive\Authentication\AuthenticationMiddleware;
 use Zend\Expressive\Session\SessionMiddleware;
 
+use function sprintf;
+
 class MissingSessionContainerException extends RuntimeException implements ExceptionInterface
 {
     public static function create() : self
