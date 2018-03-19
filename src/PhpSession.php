@@ -103,7 +103,7 @@ class PhpSession implements AuthenticationInterface
                 'Location',
                 $this->config['redirect']
             )
-            ->withStatus(301);
+            ->withStatus(302);
     }
 
     /**
