@@ -254,7 +254,7 @@ class PhpSessionTest extends TestCase
             ->withHeader('Location', '/login')
             ->willReturn($this->responsePrototype->reveal());
         $this->responsePrototype
-            ->withStatus(301)
+            ->withStatus(302)
             ->willReturn($this->responsePrototype->reveal());
 
         $phpSession = new PhpSession(
