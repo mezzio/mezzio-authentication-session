@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.4.1 - 2018-03-20
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#12](https://github.com/zendframework/zend-expressive-authentication-session/pull/12)
+  fixes the status code issued by the `PhpSession::unauthorizedResponse()`
+  method to use 302 (temporary) vs 301 (permanent) redirects.
+
 ## 0.4.0 - 2018-03-15
 
 ### Added
