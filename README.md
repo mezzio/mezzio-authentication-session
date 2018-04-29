@@ -15,6 +15,39 @@ Run the following to install this library:
 $ composer require zendframework/zend-expressive-authentication-session
 ```
 
+## Configuration
+
+```php
+<?php
+
+declare(strict_types=1);
+
+//use App\Infrastructure\Repository\UserRepository;
+//use App\Infrastructure\Repository\UserRepositoryFactory;
+use Zend\Expressive\Authentication\AuthenticationInterface;
+use Zend\Expressive\Authentication\Session\PhpSession;
+use Zend\Expressive\Authentication\UserRepositoryInterface;
+
+return [
+    'dependencies' => [
+        'aliases' => [
+            AuthenticationInterface::class => PhpSession::class,
+            UserRepositoryInterface::class => UserRepository::class,
+        ],
+
+        'factories' => [
+            UserRepository::class => UserRepositoryFactory::class,
+        ],
+    ],
+
+    'authentication' => [
+        'username' => null, // provide a custom field name for the username
+        'password' => null, // provide a custom field name for the password
+        'redirect' => '', // URI to which to redirect if no valid credentials present
+    ],
+];
+```
+
 ## Documentation
 
 Documentation is [in the doc tree](docs/book/), and can be compiled using [mkdocs](http://www.mkdocs.org):
