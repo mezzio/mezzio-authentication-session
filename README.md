@@ -43,7 +43,7 @@ return [
     'authentication' => [
         'username' => null, // provide a custom field name for the username
         'password' => null, // provide a custom field name for the password
-        'redirect' => '', // URI to which to redirect if no valid credentials present
+        'redirect' => '/login', // URI to which to redirect if no valid credentials present
     ],
 ];
 ```
