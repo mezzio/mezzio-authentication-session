@@ -46,14 +46,14 @@ class PhpSessionFactoryTest extends TestCase
 
     protected function setUp()
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
-        $this->factory = new PhpSessionFactory();
-        $this->userRegister = $this->prophesize(UserRepositoryInterface::class);
+        $this->container         = $this->prophesize(ContainerInterface::class);
+        $this->factory           = new PhpSessionFactory();
+        $this->userRegister      = $this->prophesize(UserRepositoryInterface::class);
         $this->responsePrototype = $this->prophesize(ResponseInterface::class);
-        $this->responseFactory = function () {
+        $this->responseFactory   = function () {
             return $this->responsePrototype->reveal();
         };
-        $this->userFactory = function (string $identity, array $roles = [], array $details = []) : UserInterface {
+        $this->userFactory       = function (string $identity, array $roles = [], array $details = []) : UserInterface {
             return new DefaultUser($identity, $roles, $details);
         };
     }
