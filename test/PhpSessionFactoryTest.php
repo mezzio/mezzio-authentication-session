@@ -15,9 +15,11 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionProperty;
+use Zend\Expressive\Authentication\DefaultUser;
 use Zend\Expressive\Authentication\Exception\InvalidConfigException;
 use Zend\Expressive\Authentication\Session\PhpSession;
 use Zend\Expressive\Authentication\Session\PhpSessionFactory;
+use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
 
 class PhpSessionFactoryTest extends TestCase
@@ -37,6 +39,9 @@ class PhpSessionFactoryTest extends TestCase
     /** @var callable */
     private $responseFactory;
 
+    /** @var callable */
+    private $userFactory;
+
     protected function setUp()
     {
         $this->container = $this->prophesize(ContainerInterface::class);
@@ -45,6 +50,9 @@ class PhpSessionFactoryTest extends TestCase
         $this->responsePrototype = $this->prophesize(ResponseInterface::class);
         $this->responseFactory = function () {
             return $this->responsePrototype->reveal();
+        };
+        $this->userFactory = function (string $identity, array $roles = [], array $details = []) : UserInterface {
+            return new DefaultUser($identity, $roles, $details);
         };
     }
 
@@ -69,6 +77,12 @@ class PhpSessionFactoryTest extends TestCase
             ->get(ResponseInterface::class)
             ->willReturn($this->responseFactory);
         $this->container
+            ->has(UserInterface::class)
+            ->willReturn(true);
+        $this->container
+            ->get(UserInterface::class)
+            ->willReturn($this->userFactory);
+        $this->container
             ->get('config')
             ->willReturn([]);
 
@@ -91,6 +105,12 @@ class PhpSessionFactoryTest extends TestCase
             ->get(ResponseInterface::class)
             ->willReturn($this->responseFactory);
         $this->container
+            ->has(UserInterface::class)
+            ->willReturn(true);
+        $this->container
+            ->get(UserInterface::class)
+            ->willReturn($this->userFactory);
+        $this->container
             ->get('config')
             ->willReturn([
                 'authentication' => ['redirect' => '/login'],
@@ -98,7 +118,7 @@ class PhpSessionFactoryTest extends TestCase
 
         $phpSession = ($this->factory)($this->container->reveal());
         $this->assertInstanceOf(PhpSession::class, $phpSession);
-        $this->assertResponseFactoryReturns($this->responsePrototype->reveal(), $phpSession);
+        self::assertResponseFactoryReturns($this->responsePrototype->reveal(), $phpSession);
     }
 
     public static function assertResponseFactoryReturns(ResponseInterface $expected, PhpSession $service) : void

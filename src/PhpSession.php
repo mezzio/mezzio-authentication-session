@@ -13,7 +13,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Authentication\UserRepository\UserTrait;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
 use Zend\Expressive\Session\SessionInterface;
 use Zend\Expressive\Session\SessionMiddleware;
@@ -23,34 +22,47 @@ use function strtoupper;
 
 class PhpSession implements AuthenticationInterface
 {
-    use UserTrait;
-
     /**
      * @var UserRepositoryInterface
      */
-    protected $repository;
+    private $repository;
 
     /**
      * @var array
      */
-    protected $config;
+    private $config;
 
     /**
      * @var callable
      */
-    protected $responseFactory;
+    private $responseFactory;
+
+    /**
+     * @var callable
+     */
+    private $userFactory;
 
     public function __construct(
         UserRepositoryInterface $repository,
         array $config,
-        callable $responseFactory
+        callable $responseFactory,
+        callable $userFactory
     ) {
         $this->repository = $repository;
-        $this->config = $config;
+        $this->config     = $config;
 
         // Ensures type safety of the composed factory
         $this->responseFactory = function () use ($responseFactory) : ResponseInterface {
             return $responseFactory();
+        };
+
+        // Ensures type safety of the composed factory
+        $this->userFactory = function (
+            string $identity,
+            array $roles = [],
+            array $details = []
+        ) use ($userFactory) : UserInterface {
+            return $userFactory($identity, $roles, $details);
         };
     }
 
@@ -73,7 +85,7 @@ class PhpSession implements AuthenticationInterface
             return null;
         }
 
-        $params = $request->getParsedBody();
+        $params   = $request->getParsedBody();
         $username = $this->config['username'] ?? 'username';
         $password = $this->config['password'] ?? 'password';
         if (! isset($params[$username]) || ! isset($params[$password])) {
@@ -88,7 +100,8 @@ class PhpSession implements AuthenticationInterface
         if (null !== $user) {
             $session->set(UserInterface::class, [
                 'username' => $user->getIdentity(),
-                'roles' => $user->getUserRoles(),
+                'roles'    => $user->getRoles(),
+                'details'  => $user->getDetails(),
             ]);
             $session->regenerate();
         }
@@ -119,8 +132,9 @@ class PhpSession implements AuthenticationInterface
         if (! is_array($userInfo) || ! isset($userInfo['username'])) {
             return null;
         }
-        $roles = $userInfo['roles'] ?? [];
+        $roles   = $userInfo['roles'] ?? [];
+        $details = $userInfo['details'] ?? [];
 
-        return $this->generateUser($userInfo['username'], (array) $roles);
+        return ($this->userFactory)($userInfo['username'], (array) $roles, (array) $details);
     }
 }

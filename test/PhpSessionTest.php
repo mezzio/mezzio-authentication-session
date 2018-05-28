@@ -14,6 +14,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Authentication\AuthenticationInterface;
+use Zend\Expressive\Authentication\DefaultUser;
 use Zend\Expressive\Authentication\Session\ConfigProvider;
 use Zend\Expressive\Authentication\Session\Exception;
 use Zend\Expressive\Authentication\Session\PhpSession;
@@ -38,6 +39,9 @@ class PhpSessionTest extends TestCase
     /** @var callable */
     private $responseFactory;
 
+    /** @var callable */
+    private $userFactory;
+
     /** @var SessionInterface|ObjectProphecy */
     private $session;
 
@@ -53,6 +57,9 @@ class PhpSessionTest extends TestCase
         $this->responseFactory = function () {
             return $this->responsePrototype->reveal();
         };
+        $this->userFactory = function (string $identity, array $roles = [], array $details = []) : UserInterface {
+            return new DefaultUser($identity, $roles, $details);
+        };
         $this->session = $this->prophesize(SessionInterface::class);
         $this->defaultConfig = (new ConfigProvider())()['authentication'];
     }
@@ -62,7 +69,8 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             $this->defaultConfig,
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
         $this->assertInstanceOf(AuthenticationInterface::class, $phpSession);
     }
@@ -74,7 +82,8 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             $this->defaultConfig,
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
 
         $this->expectException(Exception\MissingSessionContainerException::class);
@@ -91,7 +100,8 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             $this->defaultConfig,
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
 
         $this->assertNull($phpSession->authenticate($this->request->reveal()));
@@ -108,7 +118,8 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             $this->defaultConfig,
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
 
         $this->assertNull($phpSession->authenticate($this->request->reveal()));
@@ -123,6 +134,7 @@ class PhpSessionTest extends TestCase
             ->set(UserInterface::class, [
                 'username' => 'vimes',
                 'roles' => ['captain'],
+                'details' => ['gender' => 'male'],
             ])
             ->shouldBeCalled();
         $this->session
@@ -137,7 +149,8 @@ class PhpSessionTest extends TestCase
         ]);
 
         $this->authenticatedUser->getIdentity()->willReturn('vimes');
-        $this->authenticatedUser->getUserRoles()->willReturn(['captain']);
+        $this->authenticatedUser->getRoles()->willReturn(['captain']);
+        $this->authenticatedUser->getDetails()->willReturn(['gender' => 'male']);
 
         $this->userRegister
             ->authenticate('foo', 'bar')
@@ -146,7 +159,8 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             $this->defaultConfig,
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
 
         $result = $phpSession->authenticate($this->request->reveal());
@@ -163,6 +177,7 @@ class PhpSessionTest extends TestCase
             ->set(UserInterface::class, [
                 'username' => 'foo',
                 'roles' => [],
+                'details' => [],
             ])
             ->shouldBeCalled();
         $this->session
@@ -181,7 +196,8 @@ class PhpSessionTest extends TestCase
             ->will([$this->authenticatedUser, 'reveal']);
 
         $this->authenticatedUser->getIdentity()->willReturn('foo');
-        $this->authenticatedUser->getUserRoles()->willReturn([]);
+        $this->authenticatedUser->getRoles()->willReturn([]);
+        $this->authenticatedUser->getDetails()->willReturn([]);
 
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
@@ -189,7 +205,8 @@ class PhpSessionTest extends TestCase
                 'username' => 'user',
                 'password' => 'pass',
             ],
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
 
         $result = $phpSession->authenticate($this->request->reveal());
@@ -207,6 +224,7 @@ class PhpSessionTest extends TestCase
             ->willReturn([
                 'username' => 'vimes',
                 'roles' => ['captain'],
+                'details' => ['gender' => 'male'],
             ]);
 
         $this->request->getAttribute('session')->will([$this->session, 'reveal']);
@@ -214,14 +232,17 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             $this->defaultConfig,
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
 
         $result = $phpSession->authenticate($this->request->reveal());
 
         $this->assertInstanceOf(UserInterface::class, $result);
         $this->assertSame('vimes', $result->getIdentity());
-        $this->assertSame(['captain'], $result->getUserRoles());
+        $this->assertSame(['captain'], $result->getRoles());
+        $this->assertSame(['gender' => 'male'], $result->getDetails());
+        $this->assertSame('male', $result->getDetail('gender'));
     }
 
     public function testAuthenticationWhenSessionUserIsOfIncorrectTypeResultsInUnsuccessfulAuthentication()
@@ -239,7 +260,8 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             $this->defaultConfig,
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
 
         $this->assertNull($phpSession->authenticate($this->request->reveal()));
@@ -260,7 +282,8 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             [ 'redirect' => '/login' ],
-            $this->responseFactory
+            $this->responseFactory,
+            $this->userFactory
         );
 
         $result = $phpSession->unauthorizedResponse($this->request->reveal());
