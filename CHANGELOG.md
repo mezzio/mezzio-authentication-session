@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 0.5.0 - 2018-06-18
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- [#16](https://github.com/zendframework/zend-expressive-authentication-session/pull/16) updates the package to depend on the 0.5 series of zend-expressive-authentication.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#14](https://github.com/zendframework/zend-expressive-authentication-session/pull/14) removes the default "redirect" configuration entry, as providing
+  it by default can lead to difficult-to-debug errors. Users should provide this
+  configuration, with a path to the login URI specific to their application.
+
 ## 0.4.1 - 2018-03-20
 
 ### Added
@@ -21,10 +45,6 @@ All notable changes to this project will be documented in this file, in reverse 
 - Nothing.
 
 ### Fixed
-
-- [#14](https://github.com/zendframework/zend-expressive-authentication-session/pull/14) removes the default "redirect" configuration entry, as providing
-  it by default can lead to difficult-to-debug errors. Users should provide this configuration, with
-  a path to the login URI specific to their application.
 
 - [#12](https://github.com/zendframework/zend-expressive-authentication-session/pull/12)
   fixes the status code issued by the `PhpSession::unauthorizedResponse()`
