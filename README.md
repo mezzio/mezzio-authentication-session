@@ -17,8 +17,20 @@ $ composer require zendframework/zend-expressive-authentication-session
 
 ## Configuration
 
+You will need to provide configuration for this module to work correctly. The
+following demonstrates:
+
+- Mapping a custom `UserRepositoryInterface` implementation for use as a backend
+  to the functionality this authentication adapter provides.
+- Mapping the `PhpSession` adapter as the `AuthenticationInterface`
+  implementation to use in your application.
+- Providing configuration for this adapter, including custom field names for the
+  username and password, as well as a path in the application to which to redirect
+  when no valid credentials are present.
+
 ```php
 <?php
+// in a config/autoload/*.global.php file:
 
 declare(strict_types=1);
 
