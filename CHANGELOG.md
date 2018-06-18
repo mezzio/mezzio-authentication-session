@@ -22,6 +22,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
+- [#14](https://github.com/zendframework/zend-expressive-authentication-session/pull/14) removes the default "redirect" configuration entry, as providing
+  it by default can lead to difficult-to-debug errors. Users should provide this configuration, with
+  a path to the login URI specific to their application.
+
 - [#12](https://github.com/zendframework/zend-expressive-authentication-session/pull/12)
   fixes the status code issued by the `PhpSession::unauthorizedResponse()`
   method to use 302 (temporary) vs 301 (permanent) redirects.
