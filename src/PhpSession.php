@@ -13,6 +13,7 @@ namespace Zend\Expressive\Authentication\Session;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Traversable;
 use Zend\Expressive\Authentication\AuthenticationInterface;
 use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Authentication\UserRepositoryInterface;
@@ -102,7 +103,7 @@ class PhpSession implements AuthenticationInterface
         if (null !== $user) {
             $session->set(UserInterface::class, [
                 'username' => $user->getIdentity(),
-                'roles'    => $user->getRoles(),
+                'roles'    => iterator_to_array($this->getUserRoles($user)),
                 'details'  => $user->getDetails(),
             ]);
             $session->regenerate();
@@ -138,5 +139,13 @@ class PhpSession implements AuthenticationInterface
         $details = $userInfo['details'] ?? [];
 
         return ($this->userFactory)($userInfo['username'], (array) $roles, (array) $details);
+    }
+
+    /**
+     * Convert the iterable user roles to a Traversable.
+     */
+    private function getUserRoles(UserInterface $user) : Traversable
+    {
+        return yield from $user->getRoles();
     }
 }

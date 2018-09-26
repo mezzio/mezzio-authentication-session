@@ -331,4 +331,66 @@ class PhpSessionTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $result);
         $this->assertEquals(['/login'], $result->getHeader('Location'));
     }
+
+    public function testIterableRolesWillBeConvertedToArray()
+    {
+        $roleGenerator = function () {
+            yield 'captain';
+        };
+
+        $this->session
+            ->has(UserInterface::class)
+            ->willReturn(false);
+        $this->session
+            ->set(UserInterface::class, [
+                'username' => 'foo',
+                'roles'    => ['captain'],
+                'details'  => [],
+            ])
+            ->shouldBeCalled();
+        $this->session
+            ->regenerate()
+            ->shouldBeCalled();
+
+        $this->request
+            ->getAttribute('session')
+            ->willReturn($this->session->reveal());
+        $this->request
+            ->getMethod()
+            ->willReturn('POST');
+        $this->request
+            ->getParsedBody()
+            ->willReturn([
+                'user' => 'foo',
+                'pass' => 'bar',
+            ]);
+
+        $this->userRegister
+            ->authenticate('foo', 'bar')
+            ->willReturn($this->authenticatedUser->reveal());
+
+        $this->authenticatedUser
+            ->getIdentity()
+            ->willReturn('foo');
+        $this->authenticatedUser
+            ->getRoles()
+            ->willReturn($roleGenerator());
+        $this->authenticatedUser
+            ->getDetails()
+            ->willReturn([]);
+
+        $phpSession = new PhpSession(
+            $this->userRegister->reveal(),
+            [
+                'username' => 'user',
+                'password' => 'pass',
+            ],
+            $this->responseFactory,
+            $this->userFactory
+        );
+
+        $result = $phpSession->authenticate($this->request->reveal());
+
+        $this->assertSame($this->authenticatedUser->reveal(), $result);
+    }
 }
