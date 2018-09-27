@@ -66,11 +66,11 @@ PlatesPHP as noted earlier. As such, we will update the template in
         <div class="col-sm"><form action="<?= $action ?>" method="post">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter username">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form></div>
@@ -148,14 +148,14 @@ From here, we need to create a route for the new handler. We will open up our
 `config/routes.php` file, and edit it to add the following within its callback:
 
 ```php
-    $app->get(
-        '/login',
-        [
-            Zend\Expressive\Session\SessionMiddleware::class,
-            App\Login\LoginHandler::class,
-        ],
-        'login'
-    );
+$app->get(
+    '/login',
+    [
+        Zend\Expressive\Session\SessionMiddleware::class,
+        App\Login\LoginHandler::class,
+    ],
+    'login'
+);
 ```
 
 Let's unpack the above a bit.

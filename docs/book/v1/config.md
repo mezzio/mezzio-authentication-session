@@ -34,7 +34,6 @@ when using zend-expressive-authentication-session. In particular:
 
 
 ```php
-<?php
 // in a config/autoload/*.global.php file:
 
 declare(strict_types=1);

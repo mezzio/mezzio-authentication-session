@@ -1,7 +1,7 @@
 docs_dir: docs/book
 site_dir: docs/html
 pages:
-    - index.md
+    - Home: index.md
     - Introduction: v1/intro.md
     - Tutorial:
       - Configuration: v1/config.md
@@ -12,4 +12,3 @@ pages:
 site_name: zend-expressive-authentication-session
 site_description: 'Username/password, session-backed authentication adapter for zend-expressive-authentication.'
 repo_url: 'https://github.com/zendframework/zend-expressive-authentication-session'
-copyright: 'Copyright (c) 2017-2018 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
