@@ -71,7 +71,6 @@ class PhpSession implements AuthenticationInterface
 
     /**
      * {@inheritDoc}
-     * @todo Refactor to use zend-expressive-session
      */
     public function authenticate(ServerRequestInterface $request) : ?UserInterface
     {
