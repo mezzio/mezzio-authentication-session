@@ -1,9 +1,14 @@
 docs_dir: docs/book
 site_dir: docs/html
 pages:
-    - index.md
-    - Introduction: intro.md
+    - Home: index.md
+    - Introduction: v1/intro.md
+    - Tutorial:
+      - Configuration: v1/config.md
+      - "Login Handlers": v1/login-handler.md
+      - "Handlers Requiring Authentication": v1/requiring-authentication.md
+    - "_hidden-legacy-page-links":
+      - "_intro": intro.md
 site_name: zend-expressive-authentication-session
 site_description: 'Username/password, session-backed authentication adapter for zend-expressive-authentication.'
 repo_url: 'https://github.com/zendframework/zend-expressive-authentication-session'
-copyright: 'Copyright (c) 2017 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
