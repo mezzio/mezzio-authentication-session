@@ -7,15 +7,16 @@ authentication?
 
 In the [previous chapter](config.md), we indicated that you need to configure a
 path to which to redirect when the adapter does not detect a user. In this
-chapter, we'll detail how to create a handler for getting these details, as well
-as how to set up routing for it.
+chapter, we'll detail how to create a login handler for processing user
+credentials.
 
 Roughly, what we need to do is:
 
 - Create a handler that will both display and handle a login form, redirecting
   to the originally requested location once a successful authentication occurs.
-- Create a template with a form for capturing the username and password, with
-  the form action set to the originally requested location.
+
+- Create a template with a form for capturing the username and password.
+
 - Create a route to the new handler.
 
 ## Create the handler
@@ -31,21 +32,26 @@ By default, if you have a configured template engine, this will do the
 following:
 
 - Create the handler for you.
+
 - Create logic in the handler to render a template and return the contents in
   a response.
+
 - Create a factory for the handler.
+
 - Create a template for you in an appropriate directory.
 
 When it does these things, it provides you with the paths to each as well. In
-our case, we are using the [PlatesPHP templating
-integration](https://docs.zendframework.com/zend-expressive/v3/features/template/plates/),
+our case, we are using the [PlatesPHP templating integration](https://docs.zendframework.com/zend-expressive/v3/features/template/plates/),
 with a flat application structure, and the following files were either created
 or updated:
 
 - `src/App/Login/LoginHandler.php`, which contains the handler class itself.
+
 - `src/App/Login/LoginHandlerFactory.php`, which contains the factory for the handler.
+
 - `config/autoload/zend-expressive-tooling-factories.global.php`, which maps the
   handler to its factory for the DI container.
+
 - `templates/app/login.phtml`, which contains our template.
 
 Now that we have created the handler, we can edit it to do the work we need.
@@ -54,7 +60,7 @@ Our handler will react to two different HTTP methods.
 
 For an initial login request, the `GET` method will be used, and we will need to
 display our template. When we do, we will also memoize the originally requested
-URI, which will be available in the `Referer` header.
+URI (using the `Referer` request header).
 
 When the user submits the form, it will be via the `POST` method. When this
 happens, we will need to validate the submitted credentials; we will do this
@@ -157,7 +163,7 @@ class LoginHandler implements RequestHandlerInterface
 With these changes in place, our handler is now ready. However, we need to
 update our factory, as we've added a new dependency!
 
-To do this, do the following from the command line, in the project root
+To do this, run the following from the command line, in the project root
 directory:
 
 ```bash
@@ -172,7 +178,9 @@ This will regenerate the factory for you.
 We will now edit the template. The main considerations are:
 
 - It needs to have a form that submits back to the login page.
+
 - The form needs both a `username` and a `password` field.
+
 - We need to display an error message if one was provided.
 
 Our application is built off the skeleton, and so we are currently using
@@ -189,26 +197,42 @@ PlatesPHP as noted earlier. As such, we will update the template in
                 <?= $this->escapeHtml($error) ?>
             </div>
             <?php endif ?>
+
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
             </div>
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password">
             </div>
+
             <button type="submit" class="btn btn-primary">Submit</button>
         </form></div>
     </div>
 </div>
 ```
 
+> ### Template location and structure
+>
+> Keep in mind the following when reading the above sample:
+>
+> - If you are using the modular structure, the template may be in a different
+>   location. Use the output from the `expressive handler:create` command to
+>   determine the exact location.
+>
+> - If you are using a different template engine, the syntax of the template
+>   may vary.
+>
+> - The HTML may need to vary based on your own site's UI framework and CSS.
+
 ## Create the route
 
-From here, we need to create a route for the new handler that handles two HTTP
-methods: `GET` for displaying the initial form, and `POST` for validating
-submitted credentials. Open up your `config/routes.php` file, and edit it to add
-the following within its callback:
+Now that we have the handler and template created, we need to create a route for
+the new handler that handles two HTTP methods: `GET` for displaying the initial
+form, and `POST` for validating submitted credentials. Open up your
+`config/routes.php` file, and edit it to add the following within its callback:
 
 ```php
 $app->route(
@@ -222,35 +246,43 @@ $app->route(
 );
 ```
 
-Let's unpack the above a bit.
+> ### Understanding the routing
+>
+> You may not be familiar with the `route()` method, or middleware pipelines. If
+> the above doesn't make sense, keep reading for an explanation.
+> 
+> First, we are using the `route()` method, as we want to create a _single_ route
+> to respond to _multiple_ HTTP methods. This method has a required third argument,
+> which is an array of HTTP methods; we specify `GET` and `POST` in this array.
+> 
+> Second, we are indicating that we want the route to respond to the exact path
+> `/login`; we provide this via the initial method argument.
+> 
+> Third, we are providing a name for this route via the optional fourth argument;
+> this is what allows us to call `$this->url('login')` in our template in order to
+> generate the URL to the login page.
+> 
+> Finally, for the middleware argument, we are providing a [pipeline](https://docs.zendframework.com/zend-expressive/v1/getting-started/features/#pipelines),
+> by providing an _array_ of middleware to execute. The first item in the pipeline
+> is the `SessionMiddleware` from zend-expressive-session; this is required to
+> ensure we have a session container injected into the request. The second item is
+> our login handler itself, which will then do the actual work of creating a
+> response.
 
-First, we are using the `route()` method, as we want to create a _single_ route
-to respond to _multiple_ HTTP methods. This method has a required third argument,
-which is an array of HTTP methods; we specify `GET` and `POST` in this array.
-
-Second, we are indicating that we want the route to respond to the exact path
-`/login`; we provide this via the initial method argument.
-
-Third, we are providing a name for this route via the optional fourth argument;
-this is what allows us to call `$this->url('login')` in our template in order to
-generate the URL to the login page.
-
-Finally, for the middleware argument, we are providing a [pipeline](https://docs.zendframework.com/zend-expressive/v1/getting-started/features/#pipelines),
-by providing an _array_ of middleware to execute. The first item in the pipeline
-is the `SessionMiddleware` from zend-expressive-session; this is required to
-ensure we have a session container injected into the request. The second item is
-our login handler itself, which will then do the actual work of creating a
-response.
-
-With this in place, any routes we write that require authentication will now:
+With this route in place, any routes we write that require authentication will
+now:
 
 - Redirect to the `/login` page, which will require that:
+
 - A user provides credentials and submits the form back to the `/login` page,
   which will:
+
 - Process the credentials via the `PhpSession` adapter, which will store
   identified user details in the session, and:
+
 - Ultimately give them access (assuming any roles associated with them are
   authorized), and:
+
 - Redirect them back to the originally requested page.
 
 In the next chapter, we will [detail how to require authentication for

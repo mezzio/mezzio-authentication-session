@@ -1,8 +1,8 @@
 # Configuring Handlers To Require Authentication
 
 In the [previous chapter](login-handler.md), we detailed writing a handler to
-display a login form for submitting credentials. That handler has the form post
-to the original URL in order to validate the credentials.
+display a login form for submitting credentials. That handler then redirects
+back to the original URL that required authentication.
 
 This means that the original handler needs to have the
 `AuthenticationMiddleware` as part of its pipeline.
@@ -32,17 +32,19 @@ before the `RouteMiddleware` somewhere:
 // Pipe in the session middleware
 $app->pipe(Zend\Expressive\Session\SessionMiddleware::class);
 
-// Grab the authentication middleware, and then decorate it when piping it to
-// the application:
-$authenticationMiddleware = $container->get(
-    Zend\Expressive\Authentication\AuthenticationMiddleware::class
-);
+// Pipe a handler that checks to see if authentication is needed:
 $app->pipe($factory->callable(
-    function ($request, $handler) use ($authenticationMiddleware) {
+    // $container is present within the callback, and refers to the DI container.
+    function ($request, $handler) use ($container) {
         if ($request->getUri()->getPath() === '/login') {
+            // Login request; do not require the authentication middleware
             return $handler->handle($request);
         }
 
+        // All other requests require the authentication middleware
+        $authenticationMiddleware = $container->get(
+            Zend\Expressive\Authentication\AuthenticationMiddleware::class
+        );
         return $authenticationMiddleware->process($request, $handler);
     }
 ));
@@ -64,7 +66,7 @@ use function Zend\Stratigility\path;
 // Add this within the callback, before the routing middleware:
 $app->pipe(path('/admin', $factory->pipeline(
     Zend\Expressive\Session\SessionMiddleware::class,
-    Zend\Expressive\Authentication\AuthenticationMiddleware::class,
+    Zend\Expressive\Authentication\AuthenticationMiddleware::class
 )));
 ```
 

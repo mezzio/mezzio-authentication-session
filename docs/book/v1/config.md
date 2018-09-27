@@ -23,14 +23,14 @@ when using zend-expressive-authentication-session. In particular:
 - It aliases the `PdoDatabase` user repository implementation from
   zend-expressive-authentication as the `UserRepositoryInterface` service.
 
-- It maps the `PhpSession` adapter from this package as the
-  `AuthenticationInterface` implementation.
+- It aliases the `PhpSession` adapter from this package to the
+  `AuthenticationInterface` service.
 
 - It **does not** configure a `Zend\Expressive\Authentication\UserInterface`
   service, opting to use the default provided by zend-expressive-authentication.
 
-- It configures the path `/login` as the redirect URL to which unauthenticated
-  users will be redirected.
+- It configures the path `/login` as the URL to which unauthenticated users will
+  be redirected.
 
 
 ```php
@@ -59,6 +59,5 @@ return [
 
 ## Handling the login
 
-Once you have configured the adapter, you will also need to write a handler that
-will handle login attempts; [see the next section for details on how to
-accomplish that](login-handler.md).
+Once you have configured the adapter, [you will also need to write a handler that
+will handle login attempts](login-handler.md).
