@@ -88,7 +88,9 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;           // add this line
 use Zend\Expressive\Authentication\Session\PhpSession;  // add this line
 use Zend\Expressive\Session\SessionInterface;           // add this line
+use Zend\Expressive\Authentication\UserInterface;       // add this line
 use Zend\Expressive\Template\TemplateRendererInterface;
+
 
 class LoginHandler implements RequestHandlerInterface
 {
@@ -145,6 +147,11 @@ class LoginHandler implements RequestHandlerInterface
         SessionInterface $session,
         string $redirect
     ) : ResponseInterface {
+        // User session takes precedence over user/pass POST in
+        // the auth adapter so we remove the session prior
+        // to auth attempt
+        $session->unset(UserInterface::class);
+
         // Login was successful
         if ($this->adapter->authenticate($request)) {
             $session->unset(self::REDIRECT_ATTRIBUTE);
@@ -250,18 +257,18 @@ $app->route(
 >
 > You may not be familiar with the `route()` method, or middleware pipelines. If
 > the above doesn't make sense, keep reading for an explanation.
-> 
+>
 > First, we are using the `route()` method, as we want to create a _single_ route
 > to respond to _multiple_ HTTP methods. This method has a required third argument,
 > which is an array of HTTP methods; we specify `GET` and `POST` in this array.
-> 
+>
 > Second, we are indicating that we want the route to respond to the exact path
 > `/login`; we provide this via the initial method argument.
-> 
+>
 > Third, we are providing a name for this route via the optional fourth argument;
 > this is what allows us to call `$this->url('login')` in our template in order to
 > generate the URL to the login page.
-> 
+>
 > Finally, for the middleware argument, we are providing a [pipeline](https://docs.zendframework.com/zend-expressive/v1/getting-started/features/#pipelines),
 > by providing an _array_ of middleware to execute. The first item in the pipeline
 > is the `SessionMiddleware` from zend-expressive-session; this is required to
