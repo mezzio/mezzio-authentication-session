@@ -22,9 +22,10 @@ class MissingSessionContainerException extends RuntimeException implements Excep
     public static function create() : self
     {
         return new self(sprintf(
-            'Request is missing the attribute %s::SESSION_ATTRIBUTE ("session"); '
+            'Request is missing the attribute %s::SESSION_ATTRIBUTE ("%s"); '
             . 'perhaps you forgot to inject the %s prior to the %s?',
             SessionMiddleware::class,
+            SessionMiddleware::SESSION_ATTRIBUTE,
             SessionMiddleware::class,
             AuthenticationMiddleware::class
         ));
