@@ -1,7 +1,7 @@
 # Handling an initial login
 
 When you have configured the adapter, you can drop in the
-zend-expressive-authentication `AuthenticationMiddleware` anywhere you need to
+mezzio-authentication `AuthenticationMiddleware` anywhere you need to
 ensure you have an authenticated user. However, how do you handle the initial
 authentication?
 
@@ -21,11 +21,11 @@ Roughly, what we need to do is:
 
 ## Create the handler
 
-We will use the [zend-expressive CLI tooling](https://docs.zendframework.com/zend-expressive/v3/reference/cli-tooling)
+We will use the [mezzio CLI tooling](https://docs.mezzio.dev/mezzio/v3/reference/cli-tooling)
 to generate our handler, as well as the related factory and template:
 
 ```bash
-$ ./vendor/bin/expressive handler:create "App\Login\LoginHandler"
+$ ./vendor/bin/mezzio handler:create "App\Login\LoginHandler"
 ```
 
 By default, if you have a configured template engine, this will do the
@@ -41,7 +41,7 @@ following:
 - Create a template for you in an appropriate directory.
 
 When it does these things, it provides you with the paths to each as well. In
-our case, we are using the [PlatesPHP templating integration](https://docs.zendframework.com/zend-expressive/v3/features/template/plates/),
+our case, we are using the [PlatesPHP templating integration](https://docs.mezzio.dev/mezzio/v3/features/template/plates/),
 with a flat application structure, and the following files were either created
 or updated:
 
@@ -49,7 +49,7 @@ or updated:
 
 - `src/App/Login/LoginHandlerFactory.php`, which contains the factory for the handler.
 
-- `config/autoload/zend-expressive-tooling-factories.global.php`, which maps the
+- `config/autoload/mezzio-tooling-factories.global.php`, which maps the
   handler to its factory for the DI container.
 
 - `templates/app/login.phtml`, which contains our template.
@@ -73,7 +73,7 @@ The generated handler will already compose the `TemplateRendererInterface`, and
 render a template. We will need to add a constructor dependency on the
 `PhpSession` adapter, and store that value in a property. Additionally, since we
 will be performing a redirect for successful POST requests, we will need to add
-a requirement on `Zend\Diactoros\Response\RedirectResponse` in addition to the
+a requirement on `Laminas\Diactoros\Response\RedirectResponse` in addition to the
 logic changes in the handler.
 
 The end result should look like this:
@@ -84,12 +84,12 @@ namespace App\Login;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\RedirectResponse;           // add this line
-use Zend\Expressive\Authentication\Session\PhpSession;  // add this line
-use Zend\Expressive\Session\SessionInterface;           // add this line
-use Zend\Expressive\Authentication\UserInterface;       // add this line
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;           // add this line
+use Mezzio\Authentication\Session\PhpSession;  // add this line
+use Mezzio\Session\SessionInterface;           // add this line
+use Mezzio\Authentication\UserInterface;       // add this line
+use Mezzio\Template\TemplateRendererInterface;
 
 
 class LoginHandler implements RequestHandlerInterface
@@ -175,7 +175,7 @@ directory:
 
 ```bash
 $ rm src/App/Login/LoginHandlerFactory.php
-$ ./vendor/bin/expressive factory:create "App\Login\LoginHandler"
+$ ./vendor/bin/mezzio factory:create "App\Login\LoginHandler"
 ```
 
 This will regenerate the factory for you.
@@ -226,7 +226,7 @@ PlatesPHP as noted earlier. As such, we will update the template in
 > Keep in mind the following when reading the above sample:
 >
 > - If you are using the modular structure, the template may be in a different
->   location. Use the output from the `expressive handler:create` command to
+>   location. Use the output from the `mezzio handler:create` command to
 >   determine the exact location.
 >
 > - If you are using a different template engine, the syntax of the template
@@ -245,7 +245,7 @@ form, and `POST` for validating submitted credentials. Open up your
 $app->route(
     '/login',
     [
-        Zend\Expressive\Session\SessionMiddleware::class,
+        Mezzio\Session\SessionMiddleware::class,
         App\Login\LoginHandler::class,
     ],
     ['GET', 'POST'],
@@ -269,9 +269,9 @@ $app->route(
 > this is what allows us to call `$this->url('login')` in our template in order to
 > generate the URL to the login page.
 >
-> Finally, for the middleware argument, we are providing a [pipeline](https://docs.zendframework.com/zend-expressive/v1/getting-started/features/#pipelines),
+> Finally, for the middleware argument, we are providing a [pipeline](https://docs.mezzio.dev/mezzio/v1/getting-started/features/#pipelines),
 > by providing an _array_ of middleware to execute. The first item in the pipeline
-> is the `SessionMiddleware` from zend-expressive-session; this is required to
+> is the `SessionMiddleware` from mezzio-session; this is required to
 > ensure we have a session container injected into the request. The second item is
 > our login handler itself, which will then do the actual work of creating a
 > response.
