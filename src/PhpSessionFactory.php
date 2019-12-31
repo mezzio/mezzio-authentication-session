@@ -1,18 +1,17 @@
 <?php
+
 /**
- * @see https://github.com/zendframework/zend-expressive-authentication-session
- *     for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
- *     New BSD License
+ * @see       https://github.com/mezzio/mezzio-authentication-session for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-authentication-session/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-authentication-session/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Authentication\Session;
+namespace Mezzio\Authentication\Session;
 
+use Mezzio\Authentication\Exception;
+use Mezzio\Authentication\ResponsePrototypeTrait;
+use Mezzio\Authentication\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Authentication\Exception;
-use Zend\Expressive\Authentication\ResponsePrototypeTrait;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
 
 class PhpSessionFactory
 {
@@ -22,7 +21,9 @@ class PhpSessionFactory
     {
         $userRegister = $container->has(UserRepositoryInterface::class)
             ? $container->get(UserRepositoryInterface::class)
-            : null;
+            : ($container->has(\Zend\Expressive\Authentication\UserRepositoryInterface::class)
+                ? $container->get(\Zend\Expressive\Authentication\UserRepositoryInterface::class)
+                : null);
 
         if (null === $userRegister) {
             throw new Exception\InvalidConfigException(
