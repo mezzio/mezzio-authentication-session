@@ -2,15 +2,15 @@
 
 You will need to provide configuration for the adapter to work correctly:
 
-- You will need to alias the zend-expressive-authentication
+- You will need to alias the mezzio-authentication
   `AuthenticationInterface` to the package's `PhpSession` implementation.
 
-- You will need to ensure a zend-expressive-authentication
+- You will need to ensure a mezzio-authentication
   `UserRepositoryInterface` implementation is available and configured.
 
 - You will need to provide a factory capable of generating a `UserInterface`
   instance, if you do not want to use the default provided by
-  zend-expressive-authentication.
+  mezzio-authentication.
 
 - You will need to provide a URL or path to which the authentication middleware
   will **redirect** if no user is discovered in the session.
@@ -18,16 +18,16 @@ You will need to provide configuration for the adapter to work correctly:
 ## Example
 
 Below is an example demonstrating authentication configuration you might provide
-when using zend-expressive-authentication-session. In particular:
+when using mezzio-authentication-session. In particular:
 
 - It aliases the `PdoDatabase` user repository implementation from
-  zend-expressive-authentication as the `UserRepositoryInterface` service.
+  mezzio-authentication as the `UserRepositoryInterface` service.
 
 - It aliases the `PhpSession` adapter from this package to the
   `AuthenticationInterface` service.
 
-- It **does not** configure a `Zend\Expressive\Authentication\UserInterface`
-  service, opting to use the default provided by zend-expressive-authentication.
+- It **does not** configure a `Mezzio\Authentication\UserInterface`
+  service, opting to use the default provided by mezzio-authentication.
 
 - It configures the path `/login` as the URL to which unauthenticated users will
   be redirected.
@@ -38,10 +38,10 @@ when using zend-expressive-authentication-session. In particular:
 
 declare(strict_types=1);
 
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Authentication\Session\PhpSession;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
-use Zend\Expressive\Authentication\UserRepository\PdoDatabase;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\Session\PhpSession;
+use Mezzio\Authentication\UserRepositoryInterface;
+use Mezzio\Authentication\UserRepository\PdoDatabase;
 
 return [
     'dependencies' => [
