@@ -1,14 +1,13 @@
 docs_dir: docs/book
 site_dir: docs/html
 nav:
-    - Home: index.md
-    - Introduction: v1/intro.md
-    - Tutorial:
-      - Configuration: v1/config.md
-      - "Login Handlers": v1/login-handler.md
-      - "Handlers Requiring Authentication": v1/requiring-authentication.md
-    - "_hidden-legacy-page-links":
-      - "_intro": intro.md
+    - { Home: index.md }
+    - { Introduction: v1/intro.md }
+    - { Tutorial: [{ Configuration: v1/config.md }, { 'Login Handlers': v1/login-handler.md }, { 'Handlers Requiring Authentication': v1/requiring-authentication.md }] }
+    - { _hidden-legacy-page-links: [{ _intro: intro.md }] }
 site_name: mezzio-authentication-session
 site_description: 'Username/password, session-backed authentication adapter for mezzio-authentication.'
 repo_url: 'https://github.com/mezzio/mezzio-authentication-session'
+extra:
+    project: Mezzio
+    project_url: 'https://docs.mezzio.dev'
