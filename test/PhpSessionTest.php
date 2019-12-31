@@ -1,25 +1,24 @@
 <?php
+
 /**
- * @see https://github.com/zendframework/zend-expressive-authentication-session
- *     for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (http://www.zend.com)
- * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
- *     New BSD License
+ * @see       https://github.com/mezzio/mezzio-authentication-session for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-authentication-session/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-authentication-session/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Authentication\Session;
+namespace MezzioTest\Authentication\Session;
 
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\Session\ConfigProvider;
+use Mezzio\Authentication\Session\Exception;
+use Mezzio\Authentication\Session\PhpSession;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authentication\UserRepositoryInterface;
+use Mezzio\Session\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Authentication\Session\ConfigProvider;
-use Zend\Expressive\Authentication\Session\Exception;
-use Zend\Expressive\Authentication\Session\PhpSession;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
-use Zend\Expressive\Session\SessionInterface;
 
 class PhpSessionTest extends TestCase
 {

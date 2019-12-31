@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#9](https://github.com/zendframework/zend-expressive-authentication-session/pull/9)
-  adds support for zend-expressive-authentication 1.0.0alpha3 and up.
+- [zendframework/zend-expressive-authentication-session#9](https://github.com/zendframework/zend-expressive-authentication-session/pull/9)
+  adds support for mezzio-authentication 1.0.0alpha3 and up.
 
 ### Changed
 
@@ -19,8 +19,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- [#9](https://github.com/zendframework/zend-expressive-authentication-session/pull/9)
-  removes support for zend-expressive-authentication versions prior to
+- [zendframework/zend-expressive-authentication-session#9](https://github.com/zendframework/zend-expressive-authentication-session/pull/9)
+  removes support for mezzio-authentication versions prior to
   1.0.0alpha3.
 
 ### Fixed
@@ -47,7 +47,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#7](https://github.com/zendframework/zend-expressive-authentication-session/pull/7)
+- [zendframework/zend-expressive-authentication-session#7](https://github.com/zendframework/zend-expressive-authentication-session/pull/7)
   fixes an issue with the default username and password values defined in the
   `ConfigProvider`. Previously, these were issued as empty strings; however,
   they needed to be `null` values to ensure lookups did not provide a false
@@ -57,8 +57,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#6](https://github.com/zendframework/zend-expressive-authentication-session/pull/6)
-  adds support for zend-expressive-authentication-session 0.3.0.
+- [zendframework/zend-expressive-authentication-session#6](https://github.com/zendframework/zend-expressive-authentication-session/pull/6)
+  adds support for mezzio-authentication-session 0.3.0.
 
 ### Changed
 
@@ -70,8 +70,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- [#6](https://github.com/zendframework/zend-expressive-authentication-session/pull/6)
-  drops support for zend-expressive-authentication-session versions less than 0.3.0.
+- [zendframework/zend-expressive-authentication-session#6](https://github.com/zendframework/zend-expressive-authentication-session/pull/6)
+  drops support for mezzio-authentication-session versions less than 0.3.0.
 
 ### Fixed
 
@@ -81,8 +81,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#5](https://github.com/zendframework/zend-expressive-authentication-session/pull/5)
-  adds support for the 1.0.0-dev branch of zend-expressive-session.
+- [zendframework/zend-expressive-authentication-session#5](https://github.com/zendframework/zend-expressive-authentication-session/pull/5)
+  adds support for the 1.0.0-dev branch of mezzio-session.
 
 ### Changed
 
@@ -104,8 +104,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#2](https://github.com/zendframework/zend-expressive-authentication-session/pull/2)
-  adds support for the 1.0.0-dev branch of zend-expressive-authentication.
+- [zendframework/zend-expressive-authentication-session#2](https://github.com/zendframework/zend-expressive-authentication-session/pull/2)
+  adds support for the 1.0.0-dev branch of mezzio-authentication.
 
 ### Changed
 
@@ -127,7 +127,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Adds support for zend-expressive-authentication 0.2.0.
+- Adds support for mezzio-authentication 0.2.0.
 
 ### Changed
 
@@ -139,7 +139,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Adds support for zend-expressive-authentication 0.1.0.
+- Adds support for mezzio-authentication 0.1.0.
 
 ### Fixed
 
@@ -165,12 +165,12 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#1](https://github.com/zendframework/zend-expressive-authentication-session/pull/1)
+- [zendframework/zend-expressive-authentication-session#1](https://github.com/zendframework/zend-expressive-authentication-session/pull/1)
   fixes how the `PhpSession` adapter both stores user details in the session,
-  and retrieves them. Since zend-expressive-session does not allow object
+  and retrieves them. Since mezzio-session does not allow object
   serialization, the class now stores the username and role in the session, and
   then populates an anonymous class implementing
-  `Zend\Expressive\Authentication\UserInterface` with the values on subsequent
+  `Mezzio\Authentication\UserInterface` with the values on subsequent
   requests.
 
 ## 0.1.0 - 2017-11-09

@@ -1,42 +1,21 @@
 {
-    "name": "zendframework/zend-expressive-authentication-session",
-    "description": "Username/password, session-backed authentication adapter for zend-expressive-authentication.",
+    "name": "mezzio/mezzio-authentication-session",
+    "description": "Username/password, session-backed authentication adapter for mezzio-authentication.",
     "license": "BSD-3-Clause",
     "keywords": [
-        "expressive",
-        "zf",
-        "zendframework",
+        "laminas",
+        "mezzio",
         "authentication",
         "session"
     ],
+    "homepage": "https://mezzio.dev",
     "support": {
-        "docs": "https://docs.zendframework.com/zend-expressive-authentication-session/",
-        "issues": "https://github.com/zendframework/zend-expressive-authentication-session/issues",
-        "source": "https://github.com/zendframework/zend-expressive-authentication-session",
-        "rss": "https://github.com/zendframework/zend-expressive-authentication-session/releases.atom",
-        "slack": "https://zendframework-slack.herokuapp.com",
-        "forum": "https://discourse.zendframework.com/c/questions/expressive"
-    },
-    "require": {
-        "php": "^7.1",
-        "psr/container": "^1.0",
-        "psr/http-message": "^1.0.1",
-        "zendframework/zend-expressive-authentication": "^1.0.0alpha3",
-        "zendframework/zend-expressive-session": "^1.0.0alpha1 || ^1.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^7.0.1",
-        "zendframework/zend-coding-standard": "~1.0.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Zend\\Expressive\\Authentication\\Session\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "ZendTest\\Expressive\\Authentication\\Session\\": "test/"
-        }
+        "docs": "https://docs.mezzio.dev/mezzio-authentication-session/",
+        "issues": "https://github.com/mezzio/mezzio-authentication-session/issues",
+        "source": "https://github.com/mezzio/mezzio-authentication-session",
+        "rss": "https://github.com/mezzio/mezzio-authentication-session/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
     },
     "config": {
         "sort-packages": true
@@ -45,8 +24,30 @@
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         },
-        "zf": {
-            "config-provider": "Zend\\Expressive\\Authentication\\Session\\ConfigProvider"
+        "laminas": {
+            "config-provider": "Mezzio\\Authentication\\Session\\ConfigProvider"
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "laminas/laminas-zendframework-bridge": "^1.0",
+        "mezzio/mezzio-authentication": "^1.0.0alpha3",
+        "mezzio/mezzio-session": "^1.0.0alpha1 || ^1.0",
+        "psr/container": "^1.0",
+        "psr/http-message": "^1.0.1"
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "~1.0.0",
+        "phpunit/phpunit": "^7.0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mezzio\\Authentication\\Session\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MezzioTest\\Authentication\\Session\\": "test/"
         }
     },
     "scripts": {
@@ -58,5 +59,8 @@
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
+    "replace": {
+        "zendframework/zend-expressive-authentication-session": "self.version"
     }
 }
