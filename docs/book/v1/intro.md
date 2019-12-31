@@ -1,6 +1,6 @@
-# zend-expressive-authentication-session
+# mezzio-authentication-session
 
-This library provides a [zend-expressive-authentication adapter](https://docs.zendframework.com/zend-expressive-authentication//v1/auth-adapter/)
+This library provides a [mezzio-authentication adapter](https://docs.mezzio.dev/mezzio-authentication//v1/auth-adapter/)
 that handles form-based username/password authentication credentials
 where the user details are subsequently stored in a session.
 
