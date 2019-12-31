@@ -1,27 +1,28 @@
 <?php
+
 /**
- * @see https://github.com/zendframework/zend-expressive-authentication-session
- *     for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (http://www.zend.com)
- * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
- *     New BSD License
+ * @see       https://github.com/mezzio/mezzio-authentication-session for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-authentication-session/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-authentication-session/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Authentication\Session;
+namespace Mezzio\Authentication\Session;
 
+use Mezzio\Authentication\Exception;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authentication\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Expressive\Authentication\Exception;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
 
 class PhpSessionFactory
 {
     public function __invoke(ContainerInterface $container) : PhpSession
     {
-        if (! $container->has(UserRepositoryInterface::class)) {
+        if (! $container->has(UserRepositoryInterface::class)
+            && ! $container->has(\Zend\Expressive\Authentication\UserRepositoryInterface::class)
+        ) {
             throw new Exception\InvalidConfigException(
                 'UserRepositoryInterface service is missing for authentication'
             );
@@ -35,17 +36,19 @@ class PhpSessionFactory
             );
         }
 
-        if (! $container->has(UserInterface::class)) {
+        if (! $container->has(UserInterface::class)
+            && ! $container->has(\Zend\Expressive\Authentication\UserInterface::class)
+        ) {
             throw new Exception\InvalidConfigException(
                 'UserInterface factory service is missing for authentication'
             );
         }
 
         return new PhpSession(
-            $container->get(UserRepositoryInterface::class),
+            $container->has(UserRepositoryInterface::class) ? $container->get(UserRepositoryInterface::class) : $container->get(\Zend\Expressive\Authentication\UserRepositoryInterface::class),
             $config,
             $container->get(ResponseInterface::class),
-            $container->get(UserInterface::class)
+            $container->has(UserInterface::class) ? $container->get(UserInterface::class) : $container->get(\Zend\Expressive\Authentication\UserInterface::class)
         );
     }
 }

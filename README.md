@@ -1,9 +1,9 @@
-# zend-expressive-authentication-session
+# mezzio-authentication-session
 
-[![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-authentication-session.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-authentication-session)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-expressive-authentication-session/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-expressive-authentication-session?branch=master)
+[![Build Status](https://travis-ci.org/mezzio/mezzio-authentication-session.svg?branch=master)](https://travis-ci.org/mezzio/mezzio-authentication-session)
+[![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-authentication-session/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-authentication-session?branch=master)
 
-This library provides a [zend-expressive-authentication](https://github.com/zendframework/zend-expressive-authentication/)
+This library provides a [mezzio-authentication](https://github.com/mezzio/mezzio-authentication/)
 adapter that handles form-based username/password authentication credentials
 where the user details are subsequently stored in a session.
 
@@ -12,7 +12,7 @@ where the user details are subsequently stored in a session.
 Run the following to install this library:
 
 ```bash
-$ composer require zendframework/zend-expressive-authentication-session
+$ composer require mezzio/mezzio-authentication-session
 ```
 
 ## Configuration
@@ -36,9 +36,9 @@ declare(strict_types=1);
 
 //use App\Infrastructure\Repository\UserRepository;
 //use App\Infrastructure\Repository\UserRepositoryFactory;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Authentication\Session\PhpSession;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\Session\PhpSession;
+use Mezzio\Authentication\UserRepositoryInterface;
 
 return [
     'dependencies' => [
@@ -62,10 +62,10 @@ return [
 
 ## Documentation
 
-Documentation is [in the doc tree](docs/book/), and can be compiled using [mkdocs](http://www.mkdocs.org):
+Documentation is [in the doc tree](docs/book/), and can be compiled using [mkdocs](https://www.mkdocs.org):
 
 ```bash
 $ mkdocs build
 ```
 
-You may also [browse the documentation online](https://docs.zendframework.com/zend-expressive-authentication-session/).
+You may also [browse the documentation online](https://docs.mezzio.dev/mezzio-authentication-session/).

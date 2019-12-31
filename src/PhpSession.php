@@ -1,23 +1,22 @@
 <?php
+
 /**
- * @see https://github.com/zendframework/zend-expressive-authentication-session
- *     for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (http://www.zend.com)
- * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
- *     New BSD License
+ * @see       https://github.com/mezzio/mezzio-authentication-session for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-authentication-session/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-authentication-session/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Authentication\Session;
+namespace Mezzio\Authentication\Session;
 
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authentication\UserRepositoryInterface;
+use Mezzio\Session\SessionInterface;
+use Mezzio\Session\SessionMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Authentication\AuthenticationInterface;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
-use Zend\Expressive\Session\SessionInterface;
-use Zend\Expressive\Session\SessionMiddleware;
 
 use function is_array;
 use function strtoupper;
@@ -70,7 +69,7 @@ class PhpSession implements AuthenticationInterface
 
     /**
      * {@inheritDoc}
-     * @todo Refactor to use zend-expressive-session
+     * @todo Refactor to use mezzio-session
      */
     public function authenticate(ServerRequestInterface $request) : ?UserInterface
     {
@@ -124,7 +123,7 @@ class PhpSession implements AuthenticationInterface
     /**
      * Create a UserInterface instance from the session data.
      *
-     * zend-expressive-session does not serialize PHP objects directly. As such,
+     * mezzio-session does not serialize PHP objects directly. As such,
      * we need to create a UserInterface instance based on the data stored in
      * the session instead.
      */
