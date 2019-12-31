@@ -1,28 +1,27 @@
 <?php
+
 /**
- * @see https://github.com/zendframework/zend-expressive-authentication-session
- *     for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (http://www.zend.com)
- * @license https://github.com/zendframework/zend-expressive-authentication-session/blob/master/LICENSE.md
- *     New BSD License
+ * @see       https://github.com/mezzio/mezzio-authentication-session for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-authentication-session/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-authentication-session/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Authentication\Session;
+namespace MezzioTest\Authentication\Session;
 
+use Mezzio\Authentication\DefaultUser;
+use Mezzio\Authentication\Exception\InvalidConfigException;
+use Mezzio\Authentication\Session\PhpSession;
+use Mezzio\Authentication\Session\PhpSessionFactory;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authentication\UserRepositoryInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionProperty;
-use Zend\Expressive\Authentication\DefaultUser;
-use Zend\Expressive\Authentication\Exception\InvalidConfigException;
-use Zend\Expressive\Authentication\Session\PhpSession;
-use Zend\Expressive\Authentication\Session\PhpSessionFactory;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Authentication\UserRepositoryInterface;
 
 class PhpSessionFactoryTest extends TestCase
 {
