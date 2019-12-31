@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Username/password, session-backed authentication adapter for mezzio-authentication.">  
+    <link rel="canonical" href="https://docs.mezzio.dev/v1/login-handler/">
+    <link rel="shortcut icon" href="/img/trademark-laminas-foundation-rgb.svg">
+
+    <title>Login Handlers - mezzio-authentication-session - Laminas Docs</title>
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body id="page-top" class="mezzio">
+
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        
+        <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
+            <img src="../../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+        </a>
+        <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
+            Documentation
+        </a>
+
+        
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
+                </li>
+            </ul>
+
+            
+            
+                <div class="d-block d-sm-none">
+                    
+    <div class="subnavigation hidden-print">
+        <h4 class="subnavigation__title">
+            <a href="../..">mezzio-authentication-session</a>
+        </h4>
+
+        <h5 class="subnavigation__subtitle">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../intro/" class="subnavigation__link">Introduction</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item">
+                                <span class="subnavigation__headline">Tutorial</span>
+                                <ul class="subnavigation__list">
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../config/" class="subnavigation__link">Configuration</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Login Handlers</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../requiring-authentication/" class="subnavigation__link">Handlers Requiring Authentication</a>
+    </li>
+
+                                    
+                                </ul>
+                            </li>
+                        
+                    
+                
+            
+        </ul>
+    </div>
+
+                </div>
+            
+
+            
+            <div class="d-block d-sm-none">
+                <div class="component-selector">
+    
+    <h5 class="component-selector__subtitle">Find documentation…</h5>
+    <select class="form-control component-selector__control">
+        <option value="/">Overview</option>
+        <optgroup label="Components"></optgroup>
+    </select>
+</div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    
+    <header class="header">
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="col-6 offset-md-2">
+                <h1 class="header__title">
+                    Mezzio
+
+                    
+                        <small class="header__subtitle">mezzio-authentication-session</small>
+                    
+                </h1>
+            </div>
+
+            
+            <div class="col-4 text-sm-right">
+                
+                    
+
+                    <a href="#" class="header__link header__link--search" data-toggle="modal" data-target="#mkdocs_search_modal" title="Open search">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                    <a href="https://github.com/mezzio/mezzio-authentication-session/" class="header__link header__link--github" title="Go to repository of mezzio-authentication-session">
+                        <i class="fa fa-github"></i> GitHub
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 col-sm-12">
+                
+    
+
+    
+    
+        <div class="toc">
+            <h6 class="toc__headline">On this page</h6>
+            <ul class="toc__list">
+                
+                    <li class="toc__entry">
+                        <a href="#create-the-handler" class="toc__link">Create the handler</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#edit-the-template" class="toc__link">Edit the template</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#create-the-route" class="toc__link">Create the route</a>
+                    </li>
+                
+            </ul>
+        </div>
+    
+
+            </div>
+            <div class="col-md-7 col-sm-12 content" role="main" data-spy="scroll" data-target=".toc">
+                
+                    <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        
+            <li class="breadcrumb-item"><a href="">Overview</a></li>
+
+            
+                <li class="breadcrumb-item"><a href="../..">mezzio-authentication-session</a></li>
+
+                
+                    
+                        
+                        
+                            <li class="breadcrumb-item">Tutorial</li>
+                        
+                    
+                
+
+                <li class="breadcrumb-item active" aria-current="page">Login Handlers</li>
+            
+        
+    </ol>
+</nav>
+
+
+
+
+
+
+    
+    
+        <h2 class="chapter__headline">Tutorial</h2>
+    
+
+    <h1 id="handling-an-initial-login">Handling an initial login</h1>
+<p>When you have configured the adapter, you can drop in the
+mezzio-authentication <code>AuthenticationMiddleware</code> anywhere you need to
+ensure you have an authenticated user. However, how do you handle the initial
+authentication?</p>
+<p>In the <a href="../config/">previous chapter</a>, we indicated that you need to configure a
+path to which to redirect when the adapter does not detect a user. In this
+chapter, we'll detail how to create a login handler for processing user
+credentials.</p>
+<p>Roughly, what we need to do is:</p>
+<ul>
+<li>
+<p>Create a handler that will both display and handle a login form, redirecting
+  to the originally requested location once a successful authentication occurs.</p>
+</li>
+<li>
+<p>Create a template with a form for capturing the username and password.</p>
+</li>
+<li>
+<p>Create a route to the new handler.</p>
+</li>
+</ul>
+<h2 id="create-the-handler">Create the handler</h2>
+<p>We will use the <a href="https://docs.mezzio.dev/mezzio/v3/reference/cli-tooling">mezzio CLI tooling</a>
+to generate our handler, as well as the related factory and template:</p>
+<p> <div class=codehilite><pre><span></span>$ ./vendor/bin/mezzio handler:create <span class=s2>&quot;App\Login\LoginHandler&quot;</span>
+</pre></div></p>
+<p>By default, if you have a configured template engine, this will do the
+following:</p>
+<ul>
+<li>
+<p>Create the handler for you.</p>
+</li>
+<li>
+<p>Create logic in the handler to render a template and return the contents in
+  a response.</p>
+</li>
+<li>
+<p>Create a factory for the handler.</p>
+</li>
+<li>
+<p>Create a template for you in an appropriate directory.</p>
+</li>
+</ul>
+<p>When it does these things, it provides you with the paths to each as well. In
+our case, we are using the <a href="https://docs.mezzio.dev/mezzio/v3/features/template/plates/">PlatesPHP templating integration</a>,
+with a flat application structure, and the following files were either created
+or updated:</p>
+<ul>
+<li>
+<p><code>src/App/Login/LoginHandler.php</code>, which contains the handler class itself.</p>
+</li>
+<li>
+<p><code>src/App/Login/LoginHandlerFactory.php</code>, which contains the factory for the handler.</p>
+</li>
+<li>
+<p><code>config/autoload/mezzio-tooling-factories.global.php</code>, which maps the
+  handler to its factory for the DI container.</p>
+</li>
+<li>
+<p><code>templates/app/login.phtml</code>, which contains our template.</p>
+</li>
+</ul>
+<p>Now that we have created the handler, we can edit it to do the work we need.</p>
+<p>Our handler will react to two different HTTP methods.</p>
+<p>For an initial login request, the <code>GET</code> method will be used, and we will need to
+display our template. When we do, we will also memoize the originally requested
+URI (using the <code>Referer</code> request header).</p>
+<p>When the user submits the form, it will be via the <code>POST</code> method. When this
+happens, we will need to validate the submitted credentials; we will do this
+using the <code>PhpSession</code> adapter from this package. If login is successful, we
+will redirect to the originally requested URI, using the value we previously
+stored in our session. If login fails, we will display our template, adding an
+error message indicating the credentials were invalid.</p>
+<p>The generated handler will already compose the <code>TemplateRendererInterface</code>, and
+render a template. We will need to add a constructor dependency on the
+<code>PhpSession</code> adapter, and store that value in a property. Additionally, since we
+will be performing a redirect for successful POST requests, we will need to add
+a requirement on <code>Laminas\Diactoros\Response\RedirectResponse</code> in addition to the
+logic changes in the handler.</p>
+<p>The end result should look like this:</p>
+<p> <div class=codehilite><pre><span></span><span class=x>namespace App\Login;</span>
+
+<span class=x>use Psr\Http\Message\ResponseInterface;</span>
+<span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
+<span class=x>use Psr\Http\Server\RequestHandlerInterface;</span>
+<span class=x>use Laminas\Diactoros\Response\HtmlResponse;</span>
+<span class=x>use Laminas\Diactoros\Response\RedirectResponse;           // add this line</span>
+<span class=x>use Mezzio\Authentication\Session\PhpSession;  // add this line</span>
+<span class=x>use Mezzio\Session\SessionInterface;           // add this line</span>
+<span class=x>use Mezzio\Authentication\UserInterface;       // add this line</span>
+<span class=x>use Mezzio\Template\TemplateRendererInterface;</span>
+
+
+<span class=x>class LoginHandler implements RequestHandlerInterface</span>
+<span class=x>{</span>
+<span class=x>    private const REDIRECT_ATTRIBUTE = &#39;authentication:redirect&#39;;</span>
+
+<span class=x>    /** @var PhpSession */</span>
+<span class=x>    private $adapter;</span>
+
+<span class=x>    /** @var TemplateRendererInterface */</span>
+<span class=x>    private $renderer;</span>
+
+<span class=x>    public function __construct(TemplateRendererInterface $renderer, PhpSession $adapter)</span>
+<span class=x>    {</span>
+<span class=x>        $this-&gt;renderer = $renderer;</span>
+<span class=x>        $this-&gt;adapter = $adapter;</span>
+<span class=x>    }</span>
+
+<span class=x>    public function handle(ServerRequestInterface $request) : ResponseInterface</span>
+<span class=x>    {</span>
+<span class=x>        $session  = $request-&gt;getAttribute(&#39;session&#39;);</span>
+<span class=x>        $redirect = $this-&gt;getRedirect($request, $session);</span>
+
+<span class=x>        // Handle submitted credentials</span>
+<span class=x>        if (&#39;POST&#39; === $request-&gt;getMethod()) {</span>
+<span class=x>            return $this-&gt;handleLoginAttempt($request, $session, $redirect);</span>
+<span class=x>        }</span>
+
+<span class=x>        // Display initial login form</span>
+<span class=x>        $session-&gt;set(self::REDIRECT_ATTRIBUTE, $redirect);</span>
+<span class=x>        return new HtmlResponse($this-&gt;renderer-&gt;render(</span>
+<span class=x>            &#39;app::login&#39;,</span>
+<span class=x>            []</span>
+<span class=x>        ));</span>
+<span class=x>    }</span>
+
+<span class=x>    private function getRedirect(</span>
+<span class=x>        ServerRequestInterface $request,</span>
+<span class=x>        SessionInterface $session</span>
+<span class=x>    ) : string {</span>
+<span class=x>        $redirect = $session-&gt;get(self::REDIRECT_ATTRIBUTE);</span>
+
+<span class=x>        if (! $redirect) {</span>
+<span class=x>            $redirect = $request-&gt;getHeaderLine(&#39;Referer&#39;);</span>
+<span class=x>            if (in_array($redirect, [&#39;&#39;, &#39;/login&#39;], true)) {</span>
+<span class=x>                $redirect = &#39;/&#39;;</span>
+<span class=x>            }</span>
+<span class=x>        }</span>
+
+<span class=x>        return $redirect;</span>
+<span class=x>    }</span>
+
+<span class=x>    private function handleLoginAttempt(</span>
+<span class=x>        ServerRequestInterface $request,</span>
+<span class=x>        SessionInterface $session,</span>
+<span class=x>        string $redirect</span>
+<span class=x>    ) : ResponseInterface {</span>
+<span class=x>        // User session takes precedence over user/pass POST in</span>
+<span class=x>        // the auth adapter so we remove the session prior</span>
+<span class=x>        // to auth attempt</span>
+<span class=x>        $session-&gt;unset(UserInterface::class);</span>
+
+<span class=x>        // Login was successful</span>
+<span class=x>        if ($this-&gt;adapter-&gt;authenticate($request)) {</span>
+<span class=x>            $session-&gt;unset(self::REDIRECT_ATTRIBUTE);</span>
+<span class=x>            return new RedirectResponse($redirect);</span>
+<span class=x>        }</span>
+
+<span class=x>        // Login failed</span>
+<span class=x>        return new HtmlResponse($this-&gt;renderer-&gt;render(</span>
+<span class=x>            &#39;app::login&#39;,</span>
+<span class=x>            [&#39;error&#39; =&gt; &#39;Invalid credentials; please try again&#39;]</span>
+<span class=x>        ));</span>
+<span class=x>    }</span>
+<span class=x>}</span>
+</pre></div></p>
+<p>With these changes in place, our handler is now ready. However, we need to
+update our factory, as we've added a new dependency!</p>
+<p>To do this, run the following from the command line, in the project root
+directory:</p>
+<p> <div class=codehilite><pre><span></span>$ rm src/App/Login/LoginHandlerFactory.php
+$ ./vendor/bin/mezzio factory:create <span class=s2>&quot;App\Login\LoginHandler&quot;</span>
+</pre></div></p>
+<p>This will regenerate the factory for you.</p>
+<h2 id="edit-the-template">Edit the template</h2>
+<p>We will now edit the template. The main considerations are:</p>
+<ul>
+<li>
+<p>It needs to have a form that submits back to the login page.</p>
+</li>
+<li>
+<p>The form needs both a <code>username</code> and a <code>password</code> field.</p>
+</li>
+<li>
+<p>We need to display an error message if one was provided.</p>
+</li>
+</ul>
+<p>Our application is built off the skeleton, and so we are currently using
+<a href="https://getbootstrap.com">Bootstrap</a> for a UI framework. We are also using
+PlatesPHP as noted earlier. As such, we will update the template in
+<code>templates/app/login.phtml</code> to read as follows:</p>
+<p> <div class=codehilite><pre><span></span><span class=x>&lt;div class=&quot;container&quot;&gt;</span>
+<span class=x>    &lt;div class=&quot;row&quot;&gt;</span>
+<span class=x>        &lt;div class=&quot;col-sm&quot;&gt;&lt;form action=&quot;</span><span class=cp>&lt;?</span><span class=o>=</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>url</span><span class=p>(</span><span class=s1>&#39;login&#39;</span><span class=p>)</span> <span class=cp>?&gt;</span><span class=x>&quot; method=&quot;post&quot;&gt;</span>
+<span class=x>            </span><span class=cp>&lt;?php</span> <span class=k>if</span> <span class=p>(</span><span class=nb>isset</span><span class=p>(</span><span class=nv>$error</span><span class=p>))</span> <span class=o>:</span> <span class=cp>?&gt;</span><span class=x></span>
+<span class=x>            &lt;div class=&quot;alert alert-danger&quot; role=&quot;alert&quot;&gt;</span>
+<span class=x>                </span><span class=cp>&lt;?</span><span class=o>=</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>escapeHtml</span><span class=p>(</span><span class=nv>$error</span><span class=p>)</span> <span class=cp>?&gt;</span><span class=x></span>
+<span class=x>            &lt;/div&gt;</span>
+<span class=x>            </span><span class=cp>&lt;?php</span> <span class=k>endif</span> <span class=cp>?&gt;</span><span class=x></span>
+
+<span class=x>            &lt;div class=&quot;form-group&quot;&gt;</span>
+<span class=x>                &lt;label for=&quot;username&quot;&gt;Username&lt;/label&gt;</span>
+<span class=x>                &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;username&quot; name=&quot;username&quot; placeholder=&quot;Enter username&quot;&gt;</span>
+<span class=x>            &lt;/div&gt;</span>
+
+<span class=x>            &lt;div class=&quot;form-group&quot;&gt;</span>
+<span class=x>                &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;</span>
+<span class=x>                &lt;input type=&quot;password&quot; class=&quot;form-control&quot; id=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot;&gt;</span>
+<span class=x>            &lt;/div&gt;</span>
+
+<span class=x>            &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Submit&lt;/button&gt;</span>
+<span class=x>        &lt;/form&gt;&lt;/div&gt;</span>
+<span class=x>    &lt;/div&gt;</span>
+<span class=x>&lt;/div&gt;</span>
+</pre></div></p>
+<blockquote>
+<h3>Template location and structure</h3>
+<p>Keep in mind the following when reading the above sample:</p>
+<ul>
+<li>
+<p>If you are using the modular structure, the template may be in a different
+  location. Use the output from the <code>mezzio handler:create</code> command to
+  determine the exact location.</p>
+</li>
+<li>
+<p>If you are using a different template engine, the syntax of the template
+  may vary.</p>
+</li>
+<li>
+<p>The HTML may need to vary based on your own site's UI framework and CSS.</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="create-the-route">Create the route</h2>
+<p>Now that we have the handler and template created, we need to create a route for
+the new handler that handles two HTTP methods: <code>GET</code> for displaying the initial
+form, and <code>POST</code> for validating submitted credentials. Open up your
+<code>config/routes.php</code> file, and edit it to add the following within its callback:</p>
+<p> <div class=codehilite><pre><span></span><span class=x>$app-&gt;route(</span>
+<span class=x>    &#39;/login&#39;,</span>
+<span class=x>    [</span>
+<span class=x>        Mezzio\Session\SessionMiddleware::class,</span>
+<span class=x>        App\Login\LoginHandler::class,</span>
+<span class=x>    ],</span>
+<span class=x>    [&#39;GET&#39;, &#39;POST&#39;],</span>
+<span class=x>    &#39;login&#39;</span>
+<span class=x>);</span>
+</pre></div></p>
+<blockquote>
+<h3>Understanding the routing</h3>
+<p>You may not be familiar with the <code>route()</code> method, or middleware pipelines. If
+the above doesn't make sense, keep reading for an explanation.</p>
+<p>First, we are using the <code>route()</code> method, as we want to create a <em>single</em> route
+to respond to <em>multiple</em> HTTP methods. This method has a required third argument,
+which is an array of HTTP methods; we specify <code>GET</code> and <code>POST</code> in this array.</p>
+<p>Second, we are indicating that we want the route to respond to the exact path
+<code>/login</code>; we provide this via the initial method argument.</p>
+<p>Third, we are providing a name for this route via the optional fourth argument;
+this is what allows us to call <code>$this-&gt;url('login')</code> in our template in order to
+generate the URL to the login page.</p>
+<p>Finally, for the middleware argument, we are providing a <a href="https://docs.mezzio.dev/mezzio/v1/getting-started/features/#pipelines">pipeline</a>,
+by providing an <em>array</em> of middleware to execute. The first item in the pipeline
+is the <code>SessionMiddleware</code> from mezzio-session; this is required to
+ensure we have a session container injected into the request. The second item is
+our login handler itself, which will then do the actual work of creating a
+response.</p>
+</blockquote>
+<p>With this route in place, any routes we write that require authentication will
+now:</p>
+<ul>
+<li>
+<p>Redirect to the <code>/login</code> page, which will require that:</p>
+</li>
+<li>
+<p>A user provides credentials and submits the form back to the <code>/login</code> page,
+  which will:</p>
+</li>
+<li>
+<p>Process the credentials via the <code>PhpSession</code> adapter, which will store
+  identified user details in the session, and:</p>
+</li>
+<li>
+<p>Ultimately give them access (assuming any roles associated with them are
+  authorized), and:</p>
+</li>
+<li>
+<p>Redirect them back to the originally requested page.</p>
+</li>
+</ul>
+<p>In the next chapter, we will <a href="../requiring-authentication/">detail how to require authentication for
+individual handlers</a>.</p>
+
+
+
+
+    <nav>
+    <ul class="page-nav hidden-print">
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../config/">
+                    <i class="fa fa-chevron-left"></i> Previous
+                </a>
+            
+        </li>
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../requiring-authentication/">
+                    Next <i class="fa fa-chevron-right"></i>
+                </a>
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+
+    <div class="help-wanted">
+        <p>
+            Found a mistake or want to contribute to the documentation?
+            <a href="https://github.com/mezzio/mezzio-authentication-session/edit/master/docs/book/v1/login-handler.md" target="_blank" class="help-wanted__link">
+                Edit this page on GitHub!
+            </a>
+        </p>
+    </div>
+
+                
+            </div>
+            <div class="col-md-3 col-sm-12 sidebar">
+                
+                    <div class="component-selector">
+    
+    <h5 class="component-selector__subtitle">Find documentation…</h5>
+    <select class="form-control component-selector__control">
+        <option value="/">Overview</option>
+        <optgroup label="Components"></optgroup>
+    </select>
+</div>
+                    
+    <div class="subnavigation hidden-print">
+        <h4 class="subnavigation__title">
+            <a href="../..">mezzio-authentication-session</a>
+        </h4>
+
+        <h5 class="subnavigation__subtitle">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../intro/" class="subnavigation__link">Introduction</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item">
+                                <span class="subnavigation__headline">Tutorial</span>
+                                <ul class="subnavigation__list">
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../config/" class="subnavigation__link">Configuration</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Login Handlers</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../requiring-authentication/" class="subnavigation__link">Handlers Requiring Authentication</a>
+    </li>
+
+                                    
+                                </ul>
+                            </li>
+                        
+                    
+                
+            
+        </ul>
+    </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    
+    <footer class="footer">
+    <div class="container">
+
+        
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a class="footer__button" href="#page-top"><i class="fa fa-chevron-up" aria-hidden="true"></i></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-7 offset-md-2">
+                <h5>Laminas</h5>
+                <ul>
+                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
+                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+
+            
+            <div class="col-md-4 offset-md-2">
+                <h4 class="footer__headline">Support</h4>
+                <ul class="support__list">
+                    <li class="support__list-item">
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://laminas.dev/chat" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://github.com/laminas" class="support__link" title="Github"><i class="fa fa-github"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://twitter.com/getlaminas" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://getlaminas.org/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://getlaminas.org/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            
+            <div class="col-md-3">
+                <h4 class="footer__headline">License</h4>
+                <p>
+                    Code licensed under <a
+                        href="https://github.com/mezzio/mezzio-authentication-session//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                </p>
+            </div>
+
+            
+            <div class="col-md-3">
+                <h4 class="footer__headline">Copyright</h4>
+                <p>
+                    <!--Built with love by the Laminas team with the help of our
+                    <a href="https://github.com/mezzio/mezzio-authentication-session//graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        let base_url = '../..',
+            project  = "mezzio",
+            siteName = 'mezzio-authentication-session';
+    </script>
+    <script src="/js/scripts.js"></script>
+        <script src="../../search/main.js"></script>
+
+    
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search in mezzio-authentication-session" id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+</html>
