@@ -14,4 +14,3 @@ site_description: 'Username/password, session-backed authentication adapter for 
 repo_url: 'https://github.com/mezzio/mezzio-authentication-session'
 extra:
     project: Mezzio
-    project_url: 'https://docs.mezzio.dev'
