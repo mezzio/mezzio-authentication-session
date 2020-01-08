@@ -1,6 +1,6 @@
 # mezzio-authentication-session
 
-[![Build Status](https://travis-ci.org/mezzio/mezzio-authentication-session.svg?branch=master)](https://travis-ci.org/mezzio/mezzio-authentication-session)
+[![Build Status](https://travis-ci.com/mezzio/mezzio-authentication-session.svg?branch=master)](https://travis-ci.com/mezzio/mezzio-authentication-session)
 [![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-authentication-session/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-authentication-session?branch=master)
 
 This library provides a [mezzio-authentication](https://github.com/mezzio/mezzio-authentication/)
