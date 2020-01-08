@@ -6,10 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Username/password, session-backed authentication adapter for mezzio-authentication.">  
-    <link rel="canonical" href="https://docs.mezzio.dev/v1/requiring-authentication/">
     <link rel="shortcut icon" href="/img/trademark-laminas-foundation-rgb.svg">
 
-    <title>Handlers Requiring Authentication - mezzio-authentication-session - Laminas Docs</title>
+    <title>mezzio-authentication-session - Laminas Docs</title>
 
     <link rel="stylesheet" href="/css/styles.css">
 </head>
@@ -20,7 +19,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../../img/laminas-foundation-white.svg" height="28" alt="Laminas">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -59,7 +58,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="../..">mezzio-authentication-session</a>
+            <a href="../.">mezzio-authentication-session</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -74,7 +73,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../intro/" class="subnavigation__link">Introduction</a>
+                                <a href="../v1/intro/" class="subnavigation__link">Introduction</a>
                             </li>
                         
                     
@@ -93,19 +92,19 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../config/" class="subnavigation__link">Configuration</a>
+        <a href="../v1/config/" class="subnavigation__link">Configuration</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../login-handler/" class="subnavigation__link">Login Handlers</a>
+        <a href="../v1/login-handler/" class="subnavigation__link">Login Handlers</a>
     </li>
 
                                     
                                         
-    <li class="subnavigation__list-item subnavigation__list-item--active">
-        <a href="./" class="subnavigation__link">Handlers Requiring Authentication</a>
+    <li class="subnavigation__list-item ">
+        <a href="../v1/requiring-authentication/" class="subnavigation__link">Handlers Requiring Authentication</a>
     </li>
 
                                     
@@ -174,185 +173,21 @@
         <div class="row">
             <div class="col-md-2 col-sm-12">
                 
-    
-
-    
-    
-        <div class="toc">
-            <h6 class="toc__headline">On this page</h6>
-            <ul class="toc__list">
-                
-                    <li class="toc__entry">
-                        <a href="#requiring-authentication-everywhere" class="toc__link">Requiring authentication everywhere</a>
-                    </li>
-                
-                    <li class="toc__entry">
-                        <a href="#requiring-authentication-for-subpaths-of-the-application" class="toc__link">Requiring authentication for subpaths of the application</a>
-                    </li>
-                
-                    <li class="toc__entry">
-                        <a href="#requiring-authentication-for-individual-routes" class="toc__link">Requiring authentication for individual routes</a>
-                    </li>
-                
-            </ul>
-        </div>
-    
-
             </div>
             <div class="col-md-7 col-sm-12 content" role="main" data-spy="scroll" data-target=".toc">
                 
-                    <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        
-            <li class="breadcrumb-item"><a href="">Overview</a></li>
 
-            
-                <li class="breadcrumb-item"><a href="../..">mezzio-authentication-session</a></li>
+<h1 class="content__title">404</h1>
+<blockquote>
+    <h3>Something went wrong!</h3>
+    <p>
+        We're sorry, but the page you are looking for does not exist.
+    </p>
+</blockquote>
 
-                
-                    
-                        
-                        
-                            <li class="breadcrumb-item">Tutorial</li>
-                        
-                    
-                
-
-                <li class="breadcrumb-item active" aria-current="page">Handlers Requiring Authentication</li>
-            
-        
-    </ol>
-</nav>
+<a href="../." class="btn btn-default" role="button">Go to homepage</a>
 
 
-
-
-
-
-    
-    
-        <h2 class="chapter__headline">Tutorial</h2>
-    
-
-    <h1 id="configuring-handlers-to-require-authentication">Configuring Handlers To Require Authentication</h1>
-<p>In the <a href="../login-handler/">previous chapter</a>, we detailed writing a handler to
-display a login form for submitting credentials. That handler then redirects
-back to the original URL that required authentication.</p>
-<p>This means that the original handler needs to have the
-<code>AuthenticationMiddleware</code> as part of its pipeline.</p>
-<p>Additionally, this package depends on the mezzio-session
-<code>SessionMiddleware</code> being present and in the pipeline before the
-mezzio-authentication <code>AuthenticationMiddleware</code>, as the <code>PhpSession</code>
-adapter it provides requires access to the session container via the request.</p>
-<p>There are three ways to accomplish this:</p>
-<ul>
-<li>Requiring authentication everywhere.</li>
-<li>Requiring authentication for subpaths of the application.</li>
-<li>Requiring authentication for individual routes.</li>
-</ul>
-<h2 id="requiring-authentication-everywhere">Requiring authentication everywhere</h2>
-<p>With this approach, every request other than the one to the login form itself
-will require authentication. To make this possible, you will need to decorate
-the mezzio-authentication <code>AuthenticationMiddleware</code> so that you can
-exclude that particular path.</p>
-<p>As an example, you could do the following in the <code>config/pipeline.php</code> file,
-before the <code>RouteMiddleware</code> somewhere:</p>
-<pre class=codehilite><code class=language-php>// Pipe in the session middleware
-$app-&gt;pipe(Mezzio\Session\SessionMiddleware::class);
-
-// Pipe a handler that checks to see if authentication is needed:
-$app-&gt;pipe($factory-&gt;callable(
-    // $container is present within the callback, and refers to the DI container.
-    function ($request, $handler) use ($container) {
-        if ($request-&gt;getUri()-&gt;getPath() === '/login') {
-            // Login request; do not require the authentication middleware
-            return $handler-&gt;handle($request);
-        }
-
-        // All other requests require the authentication middleware
-        $authenticationMiddleware = $container-&gt;get(
-            Mezzio\Authentication\AuthenticationMiddleware::class
-        );
-        return $authenticationMiddleware-&gt;process($request, $handler);
-    }
-));</code></pre>
-<h2 id="requiring-authentication-for-subpaths-of-the-application">Requiring authentication for subpaths of the application</h2>
-<p>If you know all handlers under a given subpath of the application require
-authentication, you can use Stratigility's <a href="https://docs.laminas.dev/laminas-stratigility/v3/api/#path">path segregation features</a>
-to add authentication.</p>
-<p>For example, consider the following within the <code>config/pipeline.php</code> file, which
-adds authentication to any path starting with <code>/admin</code>:</p>
-<pre class=codehilite><code class=language-php>// Add this within the import section of the file:
-use function Laminas\Stratigility\path;
-
-// Add this within the callback, before the routing middleware:
-$app-&gt;pipe(path('/admin', $factory-&gt;pipeline(
-    Mezzio\Session\SessionMiddleware::class,
-    Mezzio\Authentication\AuthenticationMiddleware::class
-)));</code></pre>
-<h2 id="requiring-authentication-for-individual-routes">Requiring authentication for individual routes</h2>
-<p>The most granular approach involves adding authentication to individual routes.
-In such cases, you will create a <a href="https://docs.mezzio.dev/mezzio/v3/cookbook/route-specific-pipeline/">route-specific middleware
-pipeline</a>.</p>
-<p>As an example, if we wanted authentication for each of the routes that use the
-path <code>/admin/users[/\d+]</code>, we could do the following within our
-<code>config/routes.php</code> file:</p>
-<pre class=codehilite><code class=language-php>$app-&gt;get('/admin/users[/\d+]', [
-    Mezzio\Session\SessionMiddleware::class,
-    Mezzio\Authentication\AuthenticationMiddleware::class,
-    App\Users\UsersHandler::class,
-], 'users');
-$app-&gt;post('/admin/users', [
-    Mezzio\Session\SessionMiddleware::class,
-    Mezzio\Authentication\AuthenticationMiddleware::class,
-    App\Users\CreateUserHandler::class,
-]);
-$app-&gt;post('/admin/users[/\d+]', [
-    Mezzio\Session\SessionMiddleware::class,
-    Mezzio\Authentication\AuthenticationMiddleware::class,
-    App\Users\UpdateUserHandler::class,
-]);</code></pre>
-<p>Note that each pipeline contains both the session and authentication middleware!</p>
-
-
-
-
-    <nav>
-    <ul class="page-nav hidden-print">
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../login-handler/">
-                    <i class="fa fa-chevron-left"></i> Previous
-                </a>
-            
-        </li>
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../../intro/">
-                    Next <i class="fa fa-chevron-right"></i>
-                </a>
-            
-        </li>
-    </ul>
-</nav>
-
-
-
-
-    <div class="help-wanted">
-        <p>
-            Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/mezzio/mezzio-authentication-session/edit/master/docs/book/v1/requiring-authentication.md" target="_blank" class="help-wanted__link">
-                Edit this page on GitHub!
-            </a>
-        </p>
-    </div>
-
-                
             </div>
             <div class="col-md-3 col-sm-12 sidebar">
                 
@@ -367,7 +202,7 @@ $app-&gt;post('/admin/users[/\d+]', [
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="../..">mezzio-authentication-session</a>
+            <a href="../.">mezzio-authentication-session</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -382,7 +217,7 @@ $app-&gt;post('/admin/users[/\d+]', [
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../intro/" class="subnavigation__link">Introduction</a>
+                                <a href="../v1/intro/" class="subnavigation__link">Introduction</a>
                             </li>
                         
                     
@@ -401,19 +236,19 @@ $app-&gt;post('/admin/users[/\d+]', [
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../config/" class="subnavigation__link">Configuration</a>
+        <a href="../v1/config/" class="subnavigation__link">Configuration</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../login-handler/" class="subnavigation__link">Login Handlers</a>
+        <a href="../v1/login-handler/" class="subnavigation__link">Login Handlers</a>
     </li>
 
                                     
                                         
-    <li class="subnavigation__list-item subnavigation__list-item--active">
-        <a href="./" class="subnavigation__link">Handlers Requiring Authentication</a>
+    <li class="subnavigation__list-item ">
+        <a href="../v1/requiring-authentication/" class="subnavigation__link">Handlers Requiring Authentication</a>
     </li>
 
                                     
@@ -504,12 +339,12 @@ $app-&gt;post('/admin/users[/\d+]', [
 </footer>
 
     <script>
-        let base_url = '../..',
+        let base_url = '..',
             project  = "mezzio",
             siteName = 'mezzio-authentication-session';
     </script>
     <script src="/js/scripts.js"></script>
-        <script src="../../search/main.js"></script>
+        <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -268,28 +272,27 @@ when using mezzio-authentication-session. In particular:</p>
   be redirected.</p>
 </li>
 </ul>
-<p> <div class=codehilite><pre><span></span><span class=x>// in a config/autoload/*.global.php file:</span>
+<pre class=codehilite><code class=language-php>// in a config/autoload/*.global.php file:
 
-<span class=x>declare(strict_types=1);</span>
+declare(strict_types=1);
 
-<span class=x>use Mezzio\Authentication\AuthenticationInterface;</span>
-<span class=x>use Mezzio\Authentication\Session\PhpSession;</span>
-<span class=x>use Mezzio\Authentication\UserRepositoryInterface;</span>
-<span class=x>use Mezzio\Authentication\UserRepository\PdoDatabase;</span>
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\Session\PhpSession;
+use Mezzio\Authentication\UserRepositoryInterface;
+use Mezzio\Authentication\UserRepository\PdoDatabase;
 
-<span class=x>return [</span>
-<span class=x>    &#39;dependencies&#39; =&gt; [</span>
-<span class=x>        &#39;aliases&#39; =&gt; [</span>
-<span class=x>            AuthenticationInterface::class =&gt; PhpSession::class,</span>
-<span class=x>            UserRepositoryInterface::class =&gt; PdoDatabase::class,</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
+return [
+    'dependencies' =&gt; [
+        'aliases' =&gt; [
+            AuthenticationInterface::class =&gt; PhpSession::class,
+            UserRepositoryInterface::class =&gt; PdoDatabase::class,
+        ],
+    ],
 
-<span class=x>    &#39;authentication&#39; =&gt; [</span>
-<span class=x>        &#39;redirect&#39; =&gt; &#39;/login&#39;,</span>
-<span class=x>    ],</span>
-<span class=x>];</span>
-</pre></div></p>
+    'authentication' =&gt; [
+        'redirect' =&gt; '/login',
+    ],
+];</code></pre>
 <h2 id="handling-the-login">Handling the login</h2>
 <p>Once you have configured the adapter, <a href="../login-handler/">you will also need to write a handler that
 will handle login attempts</a>.</p>
@@ -426,9 +429,10 @@ will handle login attempts</a>.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -465,7 +469,7 @@ will handle login attempts</a>.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/mezzio/mezzio-authentication-session//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/mezzio/mezzio-authentication-session/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -474,8 +478,8 @@ will handle login attempts</a>.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/mezzio/mezzio-authentication-session//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/mezzio/mezzio-authentication-session/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

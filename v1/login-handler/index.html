@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -255,8 +259,7 @@ credentials.</p>
 <h2 id="create-the-handler">Create the handler</h2>
 <p>We will use the <a href="https://docs.mezzio.dev/mezzio/v3/reference/cli-tooling">mezzio CLI tooling</a>
 to generate our handler, as well as the related factory and template:</p>
-<p> <div class=codehilite><pre><span></span>$ ./vendor/bin/mezzio handler:create <span class=s2>&quot;App\Login\LoginHandler&quot;</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-bash>$ ./vendor/bin/mezzio handler:create &quot;App\Login\LoginHandler&quot;</code></pre>
 <p>By default, if you have a configured template engine, this will do the
 following:</p>
 <ul>
@@ -311,100 +314,98 @@ will be performing a redirect for successful POST requests, we will need to add
 a requirement on <code>Laminas\Diactoros\Response\RedirectResponse</code> in addition to the
 logic changes in the handler.</p>
 <p>The end result should look like this:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>namespace App\Login;</span>
+<pre class=codehilite><code class=language-php>namespace App\Login;
 
-<span class=x>use Psr\Http\Message\ResponseInterface;</span>
-<span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
-<span class=x>use Psr\Http\Server\RequestHandlerInterface;</span>
-<span class=x>use Laminas\Diactoros\Response\HtmlResponse;</span>
-<span class=x>use Laminas\Diactoros\Response\RedirectResponse;           // add this line</span>
-<span class=x>use Mezzio\Authentication\Session\PhpSession;  // add this line</span>
-<span class=x>use Mezzio\Session\SessionInterface;           // add this line</span>
-<span class=x>use Mezzio\Authentication\UserInterface;       // add this line</span>
-<span class=x>use Mezzio\Template\TemplateRendererInterface;</span>
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\RedirectResponse;           // add this line
+use Mezzio\Authentication\Session\PhpSession;  // add this line
+use Mezzio\Session\SessionInterface;           // add this line
+use Mezzio\Authentication\UserInterface;       // add this line
+use Mezzio\Template\TemplateRendererInterface;
 
 
-<span class=x>class LoginHandler implements RequestHandlerInterface</span>
-<span class=x>{</span>
-<span class=x>    private const REDIRECT_ATTRIBUTE = &#39;authentication:redirect&#39;;</span>
+class LoginHandler implements RequestHandlerInterface
+{
+    private const REDIRECT_ATTRIBUTE = 'authentication:redirect';
 
-<span class=x>    /** @var PhpSession */</span>
-<span class=x>    private $adapter;</span>
+    /** @var PhpSession */
+    private $adapter;
 
-<span class=x>    /** @var TemplateRendererInterface */</span>
-<span class=x>    private $renderer;</span>
+    /** @var TemplateRendererInterface */
+    private $renderer;
 
-<span class=x>    public function __construct(TemplateRendererInterface $renderer, PhpSession $adapter)</span>
-<span class=x>    {</span>
-<span class=x>        $this-&gt;renderer = $renderer;</span>
-<span class=x>        $this-&gt;adapter = $adapter;</span>
-<span class=x>    }</span>
+    public function __construct(TemplateRendererInterface $renderer, PhpSession $adapter)
+    {
+        $this-&gt;renderer = $renderer;
+        $this-&gt;adapter = $adapter;
+    }
 
-<span class=x>    public function handle(ServerRequestInterface $request) : ResponseInterface</span>
-<span class=x>    {</span>
-<span class=x>        $session  = $request-&gt;getAttribute(&#39;session&#39;);</span>
-<span class=x>        $redirect = $this-&gt;getRedirect($request, $session);</span>
+    public function handle(ServerRequestInterface $request) : ResponseInterface
+    {
+        $session  = $request-&gt;getAttribute('session');
+        $redirect = $this-&gt;getRedirect($request, $session);
 
-<span class=x>        // Handle submitted credentials</span>
-<span class=x>        if (&#39;POST&#39; === $request-&gt;getMethod()) {</span>
-<span class=x>            return $this-&gt;handleLoginAttempt($request, $session, $redirect);</span>
-<span class=x>        }</span>
+        // Handle submitted credentials
+        if ('POST' === $request-&gt;getMethod()) {
+            return $this-&gt;handleLoginAttempt($request, $session, $redirect);
+        }
 
-<span class=x>        // Display initial login form</span>
-<span class=x>        $session-&gt;set(self::REDIRECT_ATTRIBUTE, $redirect);</span>
-<span class=x>        return new HtmlResponse($this-&gt;renderer-&gt;render(</span>
-<span class=x>            &#39;app::login&#39;,</span>
-<span class=x>            []</span>
-<span class=x>        ));</span>
-<span class=x>    }</span>
+        // Display initial login form
+        $session-&gt;set(self::REDIRECT_ATTRIBUTE, $redirect);
+        return new HtmlResponse($this-&gt;renderer-&gt;render(
+            'app::login',
+            []
+        ));
+    }
 
-<span class=x>    private function getRedirect(</span>
-<span class=x>        ServerRequestInterface $request,</span>
-<span class=x>        SessionInterface $session</span>
-<span class=x>    ) : string {</span>
-<span class=x>        $redirect = $session-&gt;get(self::REDIRECT_ATTRIBUTE);</span>
+    private function getRedirect(
+        ServerRequestInterface $request,
+        SessionInterface $session
+    ) : string {
+        $redirect = $session-&gt;get(self::REDIRECT_ATTRIBUTE);
 
-<span class=x>        if (! $redirect) {</span>
-<span class=x>            $redirect = $request-&gt;getHeaderLine(&#39;Referer&#39;);</span>
-<span class=x>            if (in_array($redirect, [&#39;&#39;, &#39;/login&#39;], true)) {</span>
-<span class=x>                $redirect = &#39;/&#39;;</span>
-<span class=x>            }</span>
-<span class=x>        }</span>
+        if (! $redirect) {
+            $redirect = $request-&gt;getHeaderLine('Referer');
+            if (in_array($redirect, ['', '/login'], true)) {
+                $redirect = '/';
+            }
+        }
 
-<span class=x>        return $redirect;</span>
-<span class=x>    }</span>
+        return $redirect;
+    }
 
-<span class=x>    private function handleLoginAttempt(</span>
-<span class=x>        ServerRequestInterface $request,</span>
-<span class=x>        SessionInterface $session,</span>
-<span class=x>        string $redirect</span>
-<span class=x>    ) : ResponseInterface {</span>
-<span class=x>        // User session takes precedence over user/pass POST in</span>
-<span class=x>        // the auth adapter so we remove the session prior</span>
-<span class=x>        // to auth attempt</span>
-<span class=x>        $session-&gt;unset(UserInterface::class);</span>
+    private function handleLoginAttempt(
+        ServerRequestInterface $request,
+        SessionInterface $session,
+        string $redirect
+    ) : ResponseInterface {
+        // User session takes precedence over user/pass POST in
+        // the auth adapter so we remove the session prior
+        // to auth attempt
+        $session-&gt;unset(UserInterface::class);
 
-<span class=x>        // Login was successful</span>
-<span class=x>        if ($this-&gt;adapter-&gt;authenticate($request)) {</span>
-<span class=x>            $session-&gt;unset(self::REDIRECT_ATTRIBUTE);</span>
-<span class=x>            return new RedirectResponse($redirect);</span>
-<span class=x>        }</span>
+        // Login was successful
+        if ($this-&gt;adapter-&gt;authenticate($request)) {
+            $session-&gt;unset(self::REDIRECT_ATTRIBUTE);
+            return new RedirectResponse($redirect);
+        }
 
-<span class=x>        // Login failed</span>
-<span class=x>        return new HtmlResponse($this-&gt;renderer-&gt;render(</span>
-<span class=x>            &#39;app::login&#39;,</span>
-<span class=x>            [&#39;error&#39; =&gt; &#39;Invalid credentials; please try again&#39;]</span>
-<span class=x>        ));</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+        // Login failed
+        return new HtmlResponse($this-&gt;renderer-&gt;render(
+            'app::login',
+            ['error' =&gt; 'Invalid credentials; please try again']
+        ));
+    }
+}</code></pre>
 <p>With these changes in place, our handler is now ready. However, we need to
 update our factory, as we've added a new dependency!</p>
 <p>To do this, run the following from the command line, in the project root
 directory:</p>
-<p> <div class=codehilite><pre><span></span>$ rm src/App/Login/LoginHandlerFactory.php
-$ ./vendor/bin/mezzio factory:create <span class=s2>&quot;App\Login\LoginHandler&quot;</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-bash>$ rm src/App/Login/LoginHandlerFactory.php
+$ ./vendor/bin/mezzio factory:create &quot;App\Login\LoginHandler&quot;</code></pre>
 <p>This will regenerate the factory for you.</p>
 <h2 id="edit-the-template">Edit the template</h2>
 <p>We will now edit the template. The main considerations are:</p>
@@ -423,30 +424,29 @@ $ ./vendor/bin/mezzio factory:create <span class=s2>&quot;App\Login\LoginHandler
 <a href="https://getbootstrap.com">Bootstrap</a> for a UI framework. We are also using
 PlatesPHP as noted earlier. As such, we will update the template in
 <code>templates/app/login.phtml</code> to read as follows:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>&lt;div class=&quot;container&quot;&gt;</span>
-<span class=x>    &lt;div class=&quot;row&quot;&gt;</span>
-<span class=x>        &lt;div class=&quot;col-sm&quot;&gt;&lt;form action=&quot;</span><span class=cp>&lt;?</span><span class=o>=</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>url</span><span class=p>(</span><span class=s1>&#39;login&#39;</span><span class=p>)</span> <span class=cp>?&gt;</span><span class=x>&quot; method=&quot;post&quot;&gt;</span>
-<span class=x>            </span><span class=cp>&lt;?php</span> <span class=k>if</span> <span class=p>(</span><span class=nb>isset</span><span class=p>(</span><span class=nv>$error</span><span class=p>))</span> <span class=o>:</span> <span class=cp>?&gt;</span><span class=x></span>
-<span class=x>            &lt;div class=&quot;alert alert-danger&quot; role=&quot;alert&quot;&gt;</span>
-<span class=x>                </span><span class=cp>&lt;?</span><span class=o>=</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>escapeHtml</span><span class=p>(</span><span class=nv>$error</span><span class=p>)</span> <span class=cp>?&gt;</span><span class=x></span>
-<span class=x>            &lt;/div&gt;</span>
-<span class=x>            </span><span class=cp>&lt;?php</span> <span class=k>endif</span> <span class=cp>?&gt;</span><span class=x></span>
+<pre class=codehilite><code class=language-php>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-sm&quot;&gt;&lt;form action=&quot;&lt;?= $this-&gt;url('login') ?&gt;&quot; method=&quot;post&quot;&gt;
+            &lt;?php if (isset($error)) : ?&gt;
+            &lt;div class=&quot;alert alert-danger&quot; role=&quot;alert&quot;&gt;
+                &lt;?= $this-&gt;escapeHtml($error) ?&gt;
+            &lt;/div&gt;
+            &lt;?php endif ?&gt;
 
-<span class=x>            &lt;div class=&quot;form-group&quot;&gt;</span>
-<span class=x>                &lt;label for=&quot;username&quot;&gt;Username&lt;/label&gt;</span>
-<span class=x>                &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;username&quot; name=&quot;username&quot; placeholder=&quot;Enter username&quot;&gt;</span>
-<span class=x>            &lt;/div&gt;</span>
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;username&quot;&gt;Username&lt;/label&gt;
+                &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;username&quot; name=&quot;username&quot; placeholder=&quot;Enter username&quot;&gt;
+            &lt;/div&gt;
 
-<span class=x>            &lt;div class=&quot;form-group&quot;&gt;</span>
-<span class=x>                &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;</span>
-<span class=x>                &lt;input type=&quot;password&quot; class=&quot;form-control&quot; id=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot;&gt;</span>
-<span class=x>            &lt;/div&gt;</span>
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;
+                &lt;input type=&quot;password&quot; class=&quot;form-control&quot; id=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot;&gt;
+            &lt;/div&gt;
 
-<span class=x>            &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Submit&lt;/button&gt;</span>
-<span class=x>        &lt;/form&gt;&lt;/div&gt;</span>
-<span class=x>    &lt;/div&gt;</span>
-<span class=x>&lt;/div&gt;</span>
-</pre></div></p>
+            &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Submit&lt;/button&gt;
+        &lt;/form&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
 <blockquote>
 <h3>Template location and structure</h3>
 <p>Keep in mind the following when reading the above sample:</p>
@@ -470,16 +470,15 @@ PlatesPHP as noted earlier. As such, we will update the template in
 the new handler that handles two HTTP methods: <code>GET</code> for displaying the initial
 form, and <code>POST</code> for validating submitted credentials. Open up your
 <code>config/routes.php</code> file, and edit it to add the following within its callback:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$app-&gt;route(</span>
-<span class=x>    &#39;/login&#39;,</span>
-<span class=x>    [</span>
-<span class=x>        Mezzio\Session\SessionMiddleware::class,</span>
-<span class=x>        App\Login\LoginHandler::class,</span>
-<span class=x>    ],</span>
-<span class=x>    [&#39;GET&#39;, &#39;POST&#39;],</span>
-<span class=x>    &#39;login&#39;</span>
-<span class=x>);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$app-&gt;route(
+    '/login',
+    [
+        Mezzio\Session\SessionMiddleware::class,
+        App\Login\LoginHandler::class,
+    ],
+    ['GET', 'POST'],
+    'login'
+);</code></pre>
 <blockquote>
 <h3>Understanding the routing</h3>
 <p>You may not be familiar with the <code>route()</code> method, or middleware pipelines. If
@@ -656,9 +655,10 @@ individual handlers</a>.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -695,7 +695,7 @@ individual handlers</a>.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/mezzio/mezzio-authentication-session//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/mezzio/mezzio-authentication-session/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -704,8 +704,8 @@ individual handlers</a>.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/mezzio/mezzio-authentication-session//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/mezzio/mezzio-authentication-session/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>
