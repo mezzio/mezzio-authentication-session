@@ -147,7 +147,7 @@ class PhpSessionTest extends TestCase
             ->willReturn(false);
         $this->session
             ->set(UserInterface::class, [
-                'username' => 'vimes',
+                'identity' => 'vimes',
                 'roles'    => ['captain'],
                 'details'  => ['gender' => 'male'],
             ])
@@ -202,7 +202,7 @@ class PhpSessionTest extends TestCase
             ->willReturn(false);
         $this->session
             ->set(UserInterface::class, [
-                'username' => 'foo',
+                'identity' => 'foo',
                 'roles'    => [],
                 'details'  => [],
             ])
@@ -241,7 +241,7 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             [
-                'username' => 'user',
+                'identity' => 'user',
                 'password' => 'pass',
             ],
             $this->responseFactory,
@@ -261,7 +261,7 @@ class PhpSessionTest extends TestCase
         $this->session
             ->get(UserInterface::class)
             ->willReturn([
-                'username' => 'vimes',
+                'identity' => 'vimes',
                 'roles'    => ['captain'],
                 'details'  => ['gender' => 'male'],
             ]);
@@ -342,7 +342,7 @@ class PhpSessionTest extends TestCase
             ->willReturn(false);
         $this->session
             ->set(UserInterface::class, [
-                'username' => 'foo',
+                'identity' => 'foo',
                 'roles'    => ['captain'],
                 'details'  => [],
             ])
@@ -381,7 +381,7 @@ class PhpSessionTest extends TestCase
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
             [
-                'username' => 'user',
+                'identity' => 'user',
                 'password' => 'pass',
             ],
             $this->responseFactory,

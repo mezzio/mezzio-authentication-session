@@ -74,6 +74,7 @@ class PhpSession implements AuthenticationInterface
     public function authenticate(ServerRequestInterface $request) : ?UserInterface
     {
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
+
         if (! $session) {
             throw Exception\MissingSessionContainerException::create();
         }
@@ -87,23 +88,25 @@ class PhpSession implements AuthenticationInterface
         }
 
         $params   = $request->getParsedBody();
-        $username = $this->config['username'] ?? 'username';
+        $identity = $this->config['identity'] ?? 'username';
         $password = $this->config['password'] ?? 'password';
-        if (! isset($params[$username]) || ! isset($params[$password])) {
+
+        if (! isset($params[$identity]) || ! isset($params[$password])) {
             return null;
         }
 
         $user = $this->repository->authenticate(
-            $params[$username],
+            $params[$identity],
             $params[$password]
         );
 
         if (null !== $user) {
             $session->set(UserInterface::class, [
-                'username' => $user->getIdentity(),
+                'identity' => $user->getIdentity(),
                 'roles'    => iterator_to_array($this->getUserRoles($user)),
                 'details'  => $user->getDetails(),
             ]);
+
             $session->regenerate();
         }
 
@@ -130,13 +133,15 @@ class PhpSession implements AuthenticationInterface
     private function createUserFromSession(SessionInterface $session) : ?UserInterface
     {
         $userInfo = $session->get(UserInterface::class);
-        if (! is_array($userInfo) || ! isset($userInfo['username'])) {
+
+        if (! is_array($userInfo) || ! isset($userInfo['identity'])) {
             return null;
         }
+
         $roles   = $userInfo['roles'] ?? [];
         $details = $userInfo['details'] ?? [];
 
-        return ($this->userFactory)($userInfo['username'], (array) $roles, (array) $details);
+        return ($this->userFactory)($userInfo['identity'], (array) $roles, (array) $details);
     }
 
     /**

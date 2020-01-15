@@ -16,14 +16,14 @@ class ConfigProvider
     {
         return [
             'authentication' => $this->getAuthenticationConfig(),
-            'dependencies' => $this->getDependencies(),
+            'dependencies'   => $this->getDependencies(),
         ];
     }
 
     public function getAuthenticationConfig() : array
     {
         return [
-            'username' => null,
+            'identity' => null,
             'password' => null,
         ];
     }
