@@ -318,7 +318,8 @@ credentials.</p>
 <h2 id="create-the-handler">Create the handler</h2>
 <p>We will use the <a href="https://docs.mezzio.dev/mezzio/v3/reference/cli-tooling">mezzio CLI tooling</a>
 to generate our handler, as well as the related factory and template:</p>
-<pre class=codehilite><code class=language-bash>$ ./vendor/bin/mezzio handler:create &quot;App\Login\LoginHandler&quot;</code></pre>
+<pre class="highlight"><code class="language-bash">$ ./vendor/bin/mezzio handler:create "App\Login\LoginHandler"</code></pre>
+
 <p>By default, if you have a configured template engine, this will do the
 following:</p>
 <ul>
@@ -373,7 +374,7 @@ will be performing a redirect for successful POST requests, we will need to add
 a requirement on <code>Laminas\Diactoros\Response\RedirectResponse</code> in addition to the
 logic changes in the handler.</p>
 <p>The end result should look like this:</p>
-<pre class=codehilite><code class=language-php>namespace App\Login;
+<pre class="highlight"><code class="language-php">namespace App\Login;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -459,12 +460,14 @@ class LoginHandler implements RequestHandlerInterface
         ));
     }
 }</code></pre>
+
 <p>With these changes in place, our handler is now ready. However, we need to
 update our factory, as we've added a new dependency!</p>
 <p>To do this, run the following from the command line, in the project root
 directory:</p>
-<pre class=codehilite><code class=language-bash>$ rm src/App/Login/LoginHandlerFactory.php
-$ ./vendor/bin/mezzio factory:create &quot;App\Login\LoginHandler&quot;</code></pre>
+<pre class="highlight"><code class="language-bash">$ rm src/App/Login/LoginHandlerFactory.php
+$ ./vendor/bin/mezzio factory:create "App\Login\LoginHandler"</code></pre>
+
 <p>This will regenerate the factory for you.</p>
 <h2 id="edit-the-template">Edit the template</h2>
 <p>We will now edit the template. The main considerations are:</p>
@@ -483,29 +486,30 @@ $ ./vendor/bin/mezzio factory:create &quot;App\Login\LoginHandler&quot;</code></
 <a href="https://getbootstrap.com">Bootstrap</a> for a UI framework. We are also using
 PlatesPHP as noted earlier. As such, we will update the template in
 <code>templates/app/login.phtml</code> to read as follows:</p>
-<pre class=codehilite><code class=language-php>&lt;div class=&quot;container&quot;&gt;
-    &lt;div class=&quot;row&quot;&gt;
-        &lt;div class=&quot;col-sm&quot;&gt;&lt;form action=&quot;&lt;?= $this-&gt;url('login') ?&gt;&quot; method=&quot;post&quot;&gt;
+<pre class="highlight"><code class="language-php">&lt;div class="container"&gt;
+    &lt;div class="row"&gt;
+        &lt;div class="col-sm"&gt;&lt;form action="&lt;?= $this-&gt;url('login') ?&gt;" method="post"&gt;
             &lt;?php if (isset($error)) : ?&gt;
-            &lt;div class=&quot;alert alert-danger&quot; role=&quot;alert&quot;&gt;
+            &lt;div class="alert alert-danger" role="alert"&gt;
                 &lt;?= $this-&gt;escapeHtml($error) ?&gt;
             &lt;/div&gt;
             &lt;?php endif ?&gt;
 
-            &lt;div class=&quot;form-group&quot;&gt;
-                &lt;label for=&quot;username&quot;&gt;Username&lt;/label&gt;
-                &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;username&quot; name=&quot;username&quot; placeholder=&quot;Enter username&quot;&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="username"&gt;Username&lt;/label&gt;
+                &lt;input type="text" class="form-control" id="username" name="username" placeholder="Enter username"&gt;
             &lt;/div&gt;
 
-            &lt;div class=&quot;form-group&quot;&gt;
-                &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;
-                &lt;input type=&quot;password&quot; class=&quot;form-control&quot; id=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot;&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="password"&gt;Password&lt;/label&gt;
+                &lt;input type="password" class="form-control" id="password" name="password" placeholder="Password"&gt;
             &lt;/div&gt;
 
-            &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Submit&lt;/button&gt;
+            &lt;button type="submit" class="btn btn-primary"&gt;Submit&lt;/button&gt;
         &lt;/form&gt;&lt;/div&gt;
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+
 <blockquote>
 <h3>Template location and structure</h3>
 <p>Keep in mind the following when reading the above sample:</p>
@@ -529,7 +533,7 @@ PlatesPHP as noted earlier. As such, we will update the template in
 the new handler that handles two HTTP methods: <code>GET</code> for displaying the initial
 form, and <code>POST</code> for validating submitted credentials. Open up your
 <code>config/routes.php</code> file, and edit it to add the following within its callback:</p>
-<pre class=codehilite><code class=language-php>$app-&gt;route(
+<pre class="highlight"><code class="language-php">$app-&gt;route(
     '/login',
     [
         Mezzio\Session\SessionMiddleware::class,
@@ -538,6 +542,7 @@ form, and <code>POST</code> for validating submitted credentials. Open up your
     ['GET', 'POST'],
     'login'
 );</code></pre>
+
 <blockquote>
 <h3>Understanding the routing</h3>
 <p>You may not be familiar with the <code>route()</code> method, or middleware pipelines. If

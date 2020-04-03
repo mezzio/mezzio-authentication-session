@@ -316,7 +316,7 @@ the mezzio-authentication <code>AuthenticationMiddleware</code> so that you can
 exclude that particular path.</p>
 <p>As an example, you could do the following in the <code>config/pipeline.php</code> file,
 before the <code>RouteMiddleware</code> somewhere:</p>
-<pre class=codehilite><code class=language-php>// Pipe in the session middleware
+<pre class="highlight"><code class="language-php">// Pipe in the session middleware
 $app-&gt;pipe(Mezzio\Session\SessionMiddleware::class);
 
 // Pipe a handler that checks to see if authentication is needed:
@@ -335,13 +335,14 @@ $app-&gt;pipe($factory-&gt;callable(
         return $authenticationMiddleware-&gt;process($request, $handler);
     }
 ));</code></pre>
+
 <h2 id="requiring-authentication-for-subpaths-of-the-application">Requiring authentication for subpaths of the application</h2>
 <p>If you know all handlers under a given subpath of the application require
 authentication, you can use Stratigility's <a href="https://docs.laminas.dev/laminas-stratigility/v3/api/#path">path segregation features</a>
 to add authentication.</p>
 <p>For example, consider the following within the <code>config/pipeline.php</code> file, which
 adds authentication to any path starting with <code>/admin</code>:</p>
-<pre class=codehilite><code class=language-php>// Add this within the import section of the file:
+<pre class="highlight"><code class="language-php">// Add this within the import section of the file:
 use function Laminas\Stratigility\path;
 
 // Add this within the callback, before the routing middleware:
@@ -349,6 +350,7 @@ $app-&gt;pipe(path('/admin', $factory-&gt;pipeline(
     Mezzio\Session\SessionMiddleware::class,
     Mezzio\Authentication\AuthenticationMiddleware::class
 )));</code></pre>
+
 <h2 id="requiring-authentication-for-individual-routes">Requiring authentication for individual routes</h2>
 <p>The most granular approach involves adding authentication to individual routes.
 In such cases, you will create a <a href="https://docs.mezzio.dev/mezzio/v3/cookbook/route-specific-pipeline/">route-specific middleware
@@ -356,7 +358,7 @@ pipeline</a>.</p>
 <p>As an example, if we wanted authentication for each of the routes that use the
 path <code>/admin/users[/\d+]</code>, we could do the following within our
 <code>config/routes.php</code> file:</p>
-<pre class=codehilite><code class=language-php>$app-&gt;get('/admin/users[/\d+]', [
+<pre class="highlight"><code class="language-php">$app-&gt;get('/admin/users[/\d+]', [
     Mezzio\Session\SessionMiddleware::class,
     Mezzio\Authentication\AuthenticationMiddleware::class,
     App\Users\UsersHandler::class,
@@ -371,6 +373,7 @@ $app-&gt;post('/admin/users[/\d+]', [
     Mezzio\Authentication\AuthenticationMiddleware::class,
     App\Users\UpdateUserHandler::class,
 ]);</code></pre>
+
 <p>Note that each pipeline contains both the session and authentication middleware!</p>
 
 
