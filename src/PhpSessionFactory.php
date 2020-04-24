@@ -45,10 +45,14 @@ class PhpSessionFactory
         }
 
         return new PhpSession(
-            $container->has(UserRepositoryInterface::class) ? $container->get(UserRepositoryInterface::class) : $container->get(\Zend\Expressive\Authentication\UserRepositoryInterface::class),
+            $container->has(UserRepositoryInterface::class)
+                ? $container->get(UserRepositoryInterface::class)
+                : $container->get(\Zend\Expressive\Authentication\UserRepositoryInterface::class),
             $config,
             $container->get(ResponseInterface::class),
-            $container->has(UserInterface::class) ? $container->get(UserInterface::class) : $container->get(\Zend\Expressive\Authentication\UserInterface::class)
+            $container->has(UserInterface::class)
+                ? $container->get(UserInterface::class)
+                : $container->get(\Zend\Expressive\Authentication\UserInterface::class)
         );
     }
 }
