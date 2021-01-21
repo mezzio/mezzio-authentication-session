@@ -2,16 +2,31 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 1.1.0 - TBD
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 1.0.2 - 2021-01-21
 
-
------
-
 ### Release Notes for [1.0.2](https://github.com/mezzio/mezzio-authentication-session/milestone/1)
-
-
-
-### 1.0.2
 
 - Total issues resolved: **0**
 - Total pull requests resolved: **1**
@@ -19,7 +34,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 #### Documentation
 
- - [6: Fix example for work with Absolute urls too](https://github.com/mezzio/mezzio-authentication-session/pull/6) thanks to @Maks3w
+- [6: Fix example for work with Absolute urls too](https://github.com/mezzio/mezzio-authentication-session/pull/6) thanks to @Maks3w
 
 ## 1.0.1 - 2019-06-24
 
