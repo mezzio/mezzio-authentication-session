@@ -85,10 +85,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\Response\RedirectResponse;           // add this line
-use Mezzio\Authentication\Session\PhpSession;  // add this line
-use Mezzio\Session\SessionInterface;           // add this line
-use Mezzio\Authentication\UserInterface;       // add this line
+use Laminas\Diactoros\Response\RedirectResponse; // add this line
+use Laminas\Diactoros\Uri;                       // add this line
+use Mezzio\Authentication\Session\PhpSession;    // add this line
+use Mezzio\Session\SessionInterface;             // add this line
+use Mezzio\Authentication\UserInterface;         // add this line
 use Mezzio\Template\TemplateRendererInterface;
 
 
@@ -133,8 +134,8 @@ class LoginHandler implements RequestHandlerInterface
         $redirect = $session->get(self::REDIRECT_ATTRIBUTE);
 
         if (! $redirect) {
-            $redirect = $request->getHeaderLine('Referer');
-            if (in_array($redirect, ['', '/login'], true)) {
+            $redirect = new Uri($request->getHeaderLine('Referer'));
+            if (in_array($redirect->getPath(), ['', '/login'], true)) {
                 $redirect = '/';
             }
         }
