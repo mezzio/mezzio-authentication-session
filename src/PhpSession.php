@@ -167,7 +167,7 @@ class PhpSession implements AuthenticationInterface
             trigger_error(sprintf(
                 '%s is currently using an old configuration. The username is deprecated and has an identity instead; '
                 . 'please update your authentication configuration.',
-                __CLASS__,
+                __CLASS__
             ), E_USER_DEPRECATED);
         }
     }
