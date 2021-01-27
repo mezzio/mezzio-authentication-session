@@ -19,8 +19,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Traversable;
 
+use function array_key_exists;
 use function is_array;
+use function sprintf;
 use function strtoupper;
+use function trigger_error;
 
 class PhpSession implements AuthenticationInterface
 {
@@ -87,6 +90,8 @@ class PhpSession implements AuthenticationInterface
             return null;
         }
 
+        $this->triggerDeprecatedUsername($this->config);
+
         $params   = $request->getParsedBody();
         $identity = $this->config['identity'] ?? 'username';
         $password = $this->config['password'] ?? 'password';
@@ -134,6 +139,10 @@ class PhpSession implements AuthenticationInterface
     {
         $userInfo = $session->get(UserInterface::class);
 
+        if (is_array($userInfo)) {
+            $this->triggerDeprecatedUsername($userInfo);
+        }
+
         if (! is_array($userInfo) || ! isset($userInfo['identity'])) {
             return null;
         }
@@ -150,5 +159,16 @@ class PhpSession implements AuthenticationInterface
     private function getUserRoles(UserInterface $user) : Traversable
     {
         return yield from $user->getRoles();
+    }
+
+    private function triggerDeprecatedUsername(array $config)
+    {
+        if (array_key_exists('username', $config) && ! array_key_exists('identity', $config)) {
+            trigger_error(sprintf(
+                '%s is currently using an old configuration. The username is deprecated and has an identity instead; '
+                . 'please update your authentication configuration.',
+                __CLASS__,
+            ), E_USER_DEPRECATED);
+        }
     }
 }

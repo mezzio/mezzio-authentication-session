@@ -23,6 +23,9 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+use function sprintf;
+use function trigger_error;
+
 class PhpSessionTest extends TestCase
 {
     /** @var ServerRequestInterface|ObjectProphecy */
@@ -391,5 +394,139 @@ class PhpSessionTest extends TestCase
         $result = $phpSession->authenticate($this->request->reveal());
 
         $this->assertSame($this->authenticatedUser->reveal(), $result);
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\Error\Deprecated
+     */
+    public function testDeprecatedNoticeIfExistsUsername()
+    {
+        $this->session
+            ->has(UserInterface::class)
+            ->willReturn(false);
+
+        $this->request
+            ->getAttribute('session')
+            ->willReturn($this->session->reveal());
+        $this->request
+            ->getMethod()
+            ->willReturn('POST');
+        $this->request
+            ->getParsedBody()
+            ->willReturn([]);
+
+        $config = [
+            'username' => null,
+            'password' => null,
+        ];
+
+        $phpSession = new PhpSession(
+            $this->userRegister->reveal(),
+            $config,
+            $this->responseFactory,
+            $this->userFactory
+        );
+
+        $this->assertNull($phpSession->authenticate($this->request->reveal()));
+    }
+
+    public function testDeprecatedNoticeIfExistsUsernameAndIdentity()
+    {
+        $this->session
+            ->has(UserInterface::class)
+            ->willReturn(false);
+
+        $this->request
+            ->getAttribute('session')
+            ->willReturn($this->session->reveal());
+        $this->request
+            ->getMethod()
+            ->willReturn('POST');
+        $this->request
+            ->getParsedBody()
+            ->willReturn([]);
+
+        $config = [
+            'username' => null,
+            'identity' => null,
+            'password' => null,
+        ];
+
+        $phpSession = new PhpSession(
+            $this->userRegister->reveal(),
+            $config,
+            $this->responseFactory,
+            $this->userFactory
+        );
+
+        $this->assertNull($phpSession->authenticate($this->request->reveal()));
+    }
+
+    /**
+     * @expectedException PHPUnit\Framework\Error\Deprecated
+     */
+    public function testDeprecatedNoticeIfExistsUsernameWithUserInterface()
+    {
+        $this->session
+            ->has(UserInterface::class)
+            ->willReturn(true);
+
+        $this->session
+            ->get(UserInterface::class)
+            ->willReturn([
+                'username' => 'vimes',
+            ]);
+
+        $this->request
+            ->getAttribute('session')
+            ->willReturn($this->session->reveal());
+        $this->request
+            ->getMethod()
+            ->willReturn('GET');
+
+        $phpSession = new PhpSession(
+            $this->userRegister->reveal(),
+            $this->defaultConfig,
+            $this->responseFactory,
+            $this->userFactory
+        );
+
+        $result = $phpSession->authenticate($this->request->reveal());
+
+        $this->assertInstanceOf(UserInterface::class, $result);
+        $this->assertSame('vimes', $result->getIdentity());
+    }
+
+    public function testDeprecatedNoticeIfExistsUsernameAndIdentityWithUserInterface()
+    {
+        $this->session
+            ->has(UserInterface::class)
+            ->willReturn(true);
+
+        $this->session
+            ->get(UserInterface::class)
+            ->willReturn([
+                'identity' => 'vimes',
+                'username' => 'vimes',
+            ]);
+
+        $this->request
+            ->getAttribute('session')
+            ->willReturn($this->session->reveal());
+        $this->request
+            ->getMethod()
+            ->willReturn('GET');
+
+        $phpSession = new PhpSession(
+            $this->userRegister->reveal(),
+            $this->defaultConfig,
+            $this->responseFactory,
+            $this->userFactory
+        );
+
+        $result = $phpSession->authenticate($this->request->reveal());
+
+        $this->assertInstanceOf(UserInterface::class, $result);
+        $this->assertSame('vimes', $result->getIdentity());
     }
 }
