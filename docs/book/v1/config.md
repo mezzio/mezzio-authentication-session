@@ -52,6 +52,8 @@ return [
     ],
 
     'authentication' => [
+        'identity' => 'identity field name',
+        'password' => 'password field name',
         'redirect' => '/login',
     ],
 ];

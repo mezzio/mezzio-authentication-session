@@ -19,8 +19,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Traversable;
 
+use function array_key_exists;
 use function is_array;
+use function sprintf;
 use function strtoupper;
+use function trigger_error;
 
 class PhpSession implements AuthenticationInterface
 {
@@ -74,6 +77,7 @@ class PhpSession implements AuthenticationInterface
     public function authenticate(ServerRequestInterface $request) : ?UserInterface
     {
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
+
         if (! $session) {
             throw Exception\MissingSessionContainerException::create();
         }
@@ -86,24 +90,28 @@ class PhpSession implements AuthenticationInterface
             return null;
         }
 
+        $this->triggerDeprecatedUsername($this->config);
+
         $params   = $request->getParsedBody();
-        $username = $this->config['username'] ?? 'username';
+        $identity = $this->config['identity'] ?? 'username';
         $password = $this->config['password'] ?? 'password';
-        if (! isset($params[$username]) || ! isset($params[$password])) {
+
+        if (! isset($params[$identity]) || ! isset($params[$password])) {
             return null;
         }
 
         $user = $this->repository->authenticate(
-            $params[$username],
+            $params[$identity],
             $params[$password]
         );
 
         if (null !== $user) {
             $session->set(UserInterface::class, [
-                'username' => $user->getIdentity(),
+                'identity' => $user->getIdentity(),
                 'roles'    => iterator_to_array($this->getUserRoles($user)),
                 'details'  => $user->getDetails(),
             ]);
+
             $session->regenerate();
         }
 
@@ -130,13 +138,19 @@ class PhpSession implements AuthenticationInterface
     private function createUserFromSession(SessionInterface $session) : ?UserInterface
     {
         $userInfo = $session->get(UserInterface::class);
-        if (! is_array($userInfo) || ! isset($userInfo['username'])) {
+
+        if (is_array($userInfo)) {
+            $this->triggerDeprecatedUsername($userInfo);
+        }
+
+        if (! is_array($userInfo) || ! isset($userInfo['identity'])) {
             return null;
         }
+
         $roles   = $userInfo['roles'] ?? [];
         $details = $userInfo['details'] ?? [];
 
-        return ($this->userFactory)($userInfo['username'], (array) $roles, (array) $details);
+        return ($this->userFactory)($userInfo['identity'], (array) $roles, (array) $details);
     }
 
     /**
@@ -145,5 +159,16 @@ class PhpSession implements AuthenticationInterface
     private function getUserRoles(UserInterface $user) : Traversable
     {
         return yield from $user->getRoles();
+    }
+
+    private function triggerDeprecatedUsername(array $config)
+    {
+        if (array_key_exists('username', $config) && ! array_key_exists('identity', $config)) {
+            trigger_error(sprintf(
+                '%s is currently using an old configuration. The username is deprecated and has an identity instead; '
+                . 'please update your authentication configuration.',
+                __CLASS__
+            ), E_USER_DEPRECATED);
+        }
     }
 }
