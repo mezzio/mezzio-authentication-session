@@ -1,7 +1,6 @@
 # mezzio-authentication-session
 
-[![Build Status](https://travis-ci.com/mezzio/mezzio-authentication-session.svg?branch=master)](https://travis-ci.com/mezzio/mezzio-authentication-session)
-[![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-authentication-session/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-authentication-session?branch=master)
+[![Build Status](https://github.com/mezzio/mezzio-authentication-session/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-authentication-session/actions/workflows/continuous-integration.yml)
 
 This library provides a [mezzio-authentication](https://github.com/mezzio/mezzio-authentication/)
 adapter that handles form-based username/password authentication credentials
