@@ -43,83 +43,51 @@ class PhpSessionFactoryTest extends TestCase
     /** @var callable */
     private $userFactory;
 
-    protected function setUp(): void
-    {
-        $this->container         = $this->prophesize(ContainerInterface::class);
-        $this->factory           = new PhpSessionFactory();
-        $this->userRegister      = $this->prophesize(UserRepositoryInterface::class);
-        $this->responsePrototype = $this->prophesize(ResponseInterface::class);
-        $this->responseFactory   = function () {
-            return $this->responsePrototype->reveal();
-        };
-        $this->userFactory       = function (string $identity, array $roles = [], array $details = []): UserInterface {
-            return new DefaultUser($identity, $roles, $details);
-        };
-    }
-
     public function testInvokeWithEmptyContainer(): void
     {
         $this->expectException(InvalidConfigException::class);
-        ($this->factory)($this->container->reveal());
+        ($this->factory)($this->container);
     }
 
     public function testInvokeWithContainerEmptyConfig(): void
     {
-        $this->container
-            ->has(UserRepositoryInterface::class)
-            ->willReturn(true);
-        $this->container
-            ->get(UserRepositoryInterface::class)
-            ->willReturn($this->userRegister->reveal());
-        $this->container
-            ->has(ResponseInterface::class)
-            ->willReturn(true);
-        $this->container
-            ->get(ResponseInterface::class)
-            ->willReturn($this->responseFactory);
-        $this->container
-            ->has(UserInterface::class)
-            ->willReturn(true);
-        $this->container
-            ->get(UserInterface::class)
-            ->willReturn($this->userFactory);
-        $this->container
-            ->get('config')
-            ->willReturn([]);
+        $this->container->expects(self::atLeastOnce())
+                        ->method('has')
+                        ->willReturn(true);
+        $this->container->expects(self::atLeastOnce())
+                        ->method('get')
+                        ->willReturnMap(
+                            [
+                                ['config', []],
+                                [UserRepositoryInterface::class, $this->userRegister],
+                                [ResponseInterface::class, $this->responseFactory],
+                                [UserInterface::class, $this->userFactory],
+                            ]
+                        );
 
         $this->expectException(InvalidConfigException::class);
-        ($this->factory)($this->container->reveal());
+        ($this->factory)($this->container);
     }
 
     public function testInvokeWithContainerAndConfig(): void
     {
-        $this->container
-            ->has(UserRepositoryInterface::class)
-            ->willReturn(true);
-        $this->container
-            ->get(UserRepositoryInterface::class)
-            ->willReturn($this->userRegister->reveal());
-        $this->container
-            ->has(ResponseInterface::class)
-            ->willReturn(true);
-        $this->container
-            ->get(ResponseInterface::class)
-            ->willReturn($this->responseFactory);
-        $this->container
-            ->has(UserInterface::class)
-            ->willReturn(true);
-        $this->container
-            ->get(UserInterface::class)
-            ->willReturn($this->userFactory);
-        $this->container
-            ->get('config')
-            ->willReturn([
-                'authentication' => ['redirect' => '/login'],
-            ]);
+        $this->container->expects(self::atLeastOnce())
+                        ->method('has')
+                        ->willReturn(true);
+        $this->container->expects(self::atLeastOnce())
+                        ->method('get')
+                        ->willReturnMap(
+                            [
+                                ['config', ['authentication' => ['redirect' => '/login']]],
+                                [UserRepositoryInterface::class, $this->userRegister],
+                                [ResponseInterface::class, $this->responseFactory],
+                                [UserInterface::class, $this->userFactory],
+                            ]
+                        );
 
-        $phpSession = ($this->factory)($this->container->reveal());
+        $phpSession = ($this->factory)($this->container);
         $this->assertInstanceOf(PhpSession::class, $phpSession);
-        self::assertResponseFactoryReturns($this->responsePrototype->reveal(), $phpSession);
+        self::assertResponseFactoryReturns($this->responsePrototype, $phpSession);
     }
 
     public static function assertResponseFactoryReturns(ResponseInterface $expected, PhpSession $service): void
@@ -128,5 +96,19 @@ class PhpSessionFactoryTest extends TestCase
         $r->setAccessible(true);
         $responseFactory = $r->getValue($service);
         Assert::assertSame($expected, $responseFactory());
+    }
+
+    protected function setUp(): void
+    {
+        $this->container         = $this->createMock(ContainerInterface::class);
+        $this->factory           = new PhpSessionFactory();
+        $this->userRegister      = $this->createMock(UserRepositoryInterface::class);
+        $this->responsePrototype = $this->createMock(ResponseInterface::class);
+        $this->responseFactory   = function () {
+            return $this->responsePrototype;
+        };
+        $this->userFactory       = function (string $identity, array $roles = [], array $details = []): UserInterface {
+            return new DefaultUser($identity, $roles, $details);
+        };
     }
 }

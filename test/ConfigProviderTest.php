@@ -26,7 +26,7 @@ class ConfigProviderTest extends TestCase
     public function testInvocationReturnsArray(): array
     {
         $config = ($this->provider)();
-        $this->assertInternalType('array', $config);
+        $this->assertIsArray($config);
         return $config;
     }
 
@@ -36,6 +36,6 @@ class ConfigProviderTest extends TestCase
     public function testReturnedArrayContainsDependencies(array $config): void
     {
         $this->assertArrayHasKey('dependencies', $config);
-        $this->assertInternalType('array', $config['dependencies']);
+        $this->assertIsArray($config['dependencies']);
     }
 }
