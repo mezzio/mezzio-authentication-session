@@ -49,7 +49,7 @@ class PhpSessionTest extends TestCase
     /** @var array */
     private $defaultConfig;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->request           = $this->prophesize(ServerRequestInterface::class);
         $this->userRegister      = $this->prophesize(UserRepositoryInterface::class);
@@ -58,14 +58,14 @@ class PhpSessionTest extends TestCase
         $this->responseFactory   = function () {
             return $this->responsePrototype->reveal();
         };
-        $this->userFactory       = function (string $identity, array $roles = [], array $details = []) : UserInterface {
+        $this->userFactory       = function (string $identity, array $roles = [], array $details = []): UserInterface {
             return new DefaultUser($identity, $roles, $details);
         };
-        $this->session           = $this->prophesize(SessionInterface::class);
-        $this->defaultConfig     = (new ConfigProvider())()['authentication'];
+        $this->session       = $this->prophesize(SessionInterface::class);
+        $this->defaultConfig = (new ConfigProvider())()['authentication'];
     }
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $phpSession = new PhpSession(
             $this->userRegister->reveal(),
@@ -76,7 +76,7 @@ class PhpSessionTest extends TestCase
         $this->assertInstanceOf(AuthenticationInterface::class, $phpSession);
     }
 
-    public function testAuthenticationWithMissingSessionAttributeRaisesException()
+    public function testAuthenticationWithMissingSessionAttributeRaisesException(): void
     {
         $this->request->getAttribute('session')->willReturn(null);
 
@@ -91,7 +91,7 @@ class PhpSessionTest extends TestCase
         $phpSession->authenticate($this->request->reveal());
     }
 
-    public function testAuthenticationWhenSessionDoesNotContainUserAndRequestIsGetReturnsNull()
+    public function testAuthenticationWhenSessionDoesNotContainUserAndRequestIsGetReturnsNull(): void
     {
         $this->session
             ->has(UserInterface::class)
@@ -114,7 +114,7 @@ class PhpSessionTest extends TestCase
         $this->assertNull($phpSession->authenticate($this->request->reveal()));
     }
 
-    public function testAuthenticationWithNoSessionUserViaPostWithNoDataReturnsNull()
+    public function testAuthenticationWithNoSessionUserViaPostWithNoDataReturnsNull(): void
     {
         $this->session
             ->has(UserInterface::class)
@@ -140,7 +140,7 @@ class PhpSessionTest extends TestCase
         $this->assertNull($phpSession->authenticate($this->request->reveal()));
     }
 
-    public function testAuthenticationWithNoSessionUserViaPostWithDefaultFieldsCanHaveSuccessfulResult()
+    public function testAuthenticationWithNoSessionUserViaPostWithDefaultFieldsCanHaveSuccessfulResult(): void
     {
         $this->session
             ->has(UserInterface::class)
@@ -195,7 +195,7 @@ class PhpSessionTest extends TestCase
         $this->assertSame($this->authenticatedUser->reveal(), $result);
     }
 
-    public function testAuthenticationWithNoSessionUserViaPostWithCustomFieldsCanHaveSuccessfulResult()
+    public function testAuthenticationWithNoSessionUserViaPostWithCustomFieldsCanHaveSuccessfulResult(): void
     {
         $this->session
             ->has(UserInterface::class)
@@ -253,7 +253,7 @@ class PhpSessionTest extends TestCase
         $this->assertSame($this->authenticatedUser->reveal(), $result);
     }
 
-    public function testCanAuthenticateUserProvidedViaSession()
+    public function testCanAuthenticateUserProvidedViaSession(): void
     {
         $this->session
             ->has(UserInterface::class)
@@ -286,7 +286,7 @@ class PhpSessionTest extends TestCase
         $this->assertSame('male', $result->getDetail('gender'));
     }
 
-    public function testAuthenticationWhenSessionUserIsOfIncorrectTypeResultsInUnsuccessfulAuthentication()
+    public function testAuthenticationWhenSessionUserIsOfIncorrectTypeResultsInUnsuccessfulAuthentication(): void
     {
         $this->session
             ->has(UserInterface::class)
@@ -307,7 +307,7 @@ class PhpSessionTest extends TestCase
         $this->assertNull($phpSession->authenticate($this->request->reveal()));
     }
 
-    public function testUnauthorizedResponse()
+    public function testUnauthorizedResponse(): void
     {
         $this->responsePrototype
             ->getHeader('Location')
@@ -331,7 +331,7 @@ class PhpSessionTest extends TestCase
         $this->assertEquals(['/login'], $result->getHeader('Location'));
     }
 
-    public function testIterableRolesWillBeConvertedToArray()
+    public function testIterableRolesWillBeConvertedToArray(): void
     {
         $roleGenerator = function () {
             yield 'captain';

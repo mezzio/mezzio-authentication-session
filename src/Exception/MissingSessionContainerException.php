@@ -18,7 +18,7 @@ use function sprintf;
 
 class MissingSessionContainerException extends RuntimeException implements ExceptionInterface
 {
-    public static function create() : self
+    public static function create(): self
     {
         return new self(sprintf(
             'Request is missing the attribute %s::SESSION_ATTRIBUTE ("%s"); '

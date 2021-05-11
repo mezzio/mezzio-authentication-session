@@ -43,7 +43,7 @@ class PhpSessionFactoryTest extends TestCase
     /** @var callable */
     private $userFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->container         = $this->prophesize(ContainerInterface::class);
         $this->factory           = new PhpSessionFactory();
@@ -52,18 +52,18 @@ class PhpSessionFactoryTest extends TestCase
         $this->responseFactory   = function () {
             return $this->responsePrototype->reveal();
         };
-        $this->userFactory       = function (string $identity, array $roles = [], array $details = []) : UserInterface {
+        $this->userFactory       = function (string $identity, array $roles = [], array $details = []): UserInterface {
             return new DefaultUser($identity, $roles, $details);
         };
     }
 
-    public function testInvokeWithEmptyContainer()
+    public function testInvokeWithEmptyContainer(): void
     {
         $this->expectException(InvalidConfigException::class);
         ($this->factory)($this->container->reveal());
     }
 
-    public function testInvokeWithContainerEmptyConfig()
+    public function testInvokeWithContainerEmptyConfig(): void
     {
         $this->container
             ->has(UserRepositoryInterface::class)
@@ -91,7 +91,7 @@ class PhpSessionFactoryTest extends TestCase
         ($this->factory)($this->container->reveal());
     }
 
-    public function testInvokeWithContainerAndConfig()
+    public function testInvokeWithContainerAndConfig(): void
     {
         $this->container
             ->has(UserRepositoryInterface::class)
@@ -122,7 +122,7 @@ class PhpSessionFactoryTest extends TestCase
         self::assertResponseFactoryReturns($this->responsePrototype->reveal(), $phpSession);
     }
 
-    public static function assertResponseFactoryReturns(ResponseInterface $expected, PhpSession $service) : void
+    public static function assertResponseFactoryReturns(ResponseInterface $expected, PhpSession $service): void
     {
         $r = new ReflectionProperty($service, 'responseFactory');
         $r->setAccessible(true);
