@@ -32,7 +32,6 @@ when using mezzio-authentication-session. In particular:
 - It configures the path `/login` as the URL to which unauthenticated users will
   be redirected.
 
-
 ```php
 // in a config/autoload/*.global.php file:
 
