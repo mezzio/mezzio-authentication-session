@@ -18,9 +18,10 @@ use Psr\Http\Message\ResponseInterface;
 
 class PhpSessionFactory
 {
-    public function __invoke(ContainerInterface $container) : PhpSession
+    public function __invoke(ContainerInterface $container): PhpSession
     {
-        if (! $container->has(UserRepositoryInterface::class)
+        if (
+            ! $container->has(UserRepositoryInterface::class)
             && ! $container->has(\Zend\Expressive\Authentication\UserRepositoryInterface::class)
         ) {
             throw new Exception\InvalidConfigException(
@@ -36,7 +37,8 @@ class PhpSessionFactory
             );
         }
 
-        if (! $container->has(UserInterface::class)
+        if (
+            ! $container->has(UserInterface::class)
             && ! $container->has(\Zend\Expressive\Authentication\UserInterface::class)
         ) {
             throw new Exception\InvalidConfigException(

@@ -49,26 +49,10 @@ class PhpSessionTest extends TestCase
     /** @var array */
     private $defaultConfig;
 
-    protected function setUp()
-    {
-        $this->request           = $this->prophesize(ServerRequestInterface::class);
-        $this->userRegister      = $this->prophesize(UserRepositoryInterface::class);
-        $this->authenticatedUser = $this->prophesize(UserInterface::class);
-        $this->responsePrototype = $this->prophesize(ResponseInterface::class);
-        $this->responseFactory   = function () {
-            return $this->responsePrototype->reveal();
-        };
-        $this->userFactory       = function (string $identity, array $roles = [], array $details = []) : UserInterface {
-            return new DefaultUser($identity, $roles, $details);
-        };
-        $this->session           = $this->prophesize(SessionInterface::class);
-        $this->defaultConfig     = (new ConfigProvider())()['authentication'];
-    }
-
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             $this->defaultConfig,
             $this->responseFactory,
             $this->userFactory
@@ -76,170 +60,190 @@ class PhpSessionTest extends TestCase
         $this->assertInstanceOf(AuthenticationInterface::class, $phpSession);
     }
 
-    public function testAuthenticationWithMissingSessionAttributeRaisesException()
+    public function testAuthenticationWithMissingSessionAttributeRaisesException(): void
     {
-        $this->request->getAttribute('session')->willReturn(null);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getAttribute')
+                      ->with('session')
+                      ->willReturn(null);
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             $this->defaultConfig,
             $this->responseFactory,
             $this->userFactory
         );
 
         $this->expectException(Exception\MissingSessionContainerException::class);
-        $phpSession->authenticate($this->request->reveal());
+        $phpSession->authenticate($this->request);
     }
 
-    public function testAuthenticationWhenSessionDoesNotContainUserAndRequestIsGetReturnsNull()
+    public function testAuthenticationWhenSessionDoesNotContainUserAndRequestIsGetReturnsNull(): void
     {
-        $this->session
-            ->has(UserInterface::class)
-            ->willReturn(false);
-
-        $this->request
-            ->getAttribute('session')
-            ->willReturn($this->session->reveal());
-        $this->request
-            ->getMethod()
-            ->willReturn('GET');
+        $this->session->expects(self::atLeastOnce())
+                      ->method('has')
+                      ->with(UserInterface::class)
+                      ->willReturn(false);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getAttribute')
+                      ->with('session')
+                      ->willReturn($this->session);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getMethod')
+                      ->willReturn('GET');
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             $this->defaultConfig,
             $this->responseFactory,
             $this->userFactory
         );
 
-        $this->assertNull($phpSession->authenticate($this->request->reveal()));
+        $this->assertNull($phpSession->authenticate($this->request));
     }
 
-    public function testAuthenticationWithNoSessionUserViaPostWithNoDataReturnsNull()
+    public function testAuthenticationWithNoSessionUserViaPostWithNoDataReturnsNull(): void
     {
-        $this->session
-            ->has(UserInterface::class)
-            ->willReturn(false);
+        $this->session->expects(self::atLeastOnce())
+                      ->method('has')
+                      ->with(UserInterface::class)
+                      ->willReturn(false);
 
-        $this->request
-            ->getAttribute('session')
-            ->willReturn($this->session->reveal());
-        $this->request
-            ->getMethod()
-            ->willReturn('POST');
-        $this->request
-            ->getParsedBody()
-            ->willReturn([]);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getAttribute')
+                      ->with('session')
+                      ->willReturn($this->session);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getMethod')
+                      ->willReturn('POST');
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getParsedBody')
+                      ->willReturn([]);
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             $this->defaultConfig,
             $this->responseFactory,
             $this->userFactory
         );
 
-        $this->assertNull($phpSession->authenticate($this->request->reveal()));
+        $this->assertNull($phpSession->authenticate($this->request));
     }
 
-    public function testAuthenticationWithNoSessionUserViaPostWithDefaultFieldsCanHaveSuccessfulResult()
+    public function testAuthenticationWithNoSessionUserViaPostWithDefaultFieldsCanHaveSuccessfulResult(): void
     {
-        $this->session
-            ->has(UserInterface::class)
-            ->willReturn(false);
-        $this->session
-            ->set(UserInterface::class, [
-                'username' => 'vimes',
-                'roles'    => ['captain'],
-                'details'  => ['gender' => 'male'],
-            ])
-            ->shouldBeCalled();
-        $this->session
-            ->regenerate()
-            ->shouldBeCalled();
+        $this->session->expects(self::atLeastOnce())
+                      ->method('has')
+                      ->with(UserInterface::class)
+                      ->willReturn(false);
+        $this->session->expects(self::atLeastOnce())
+                      ->method('set')
+                      ->with(
+                          UserInterface::class,
+                          [
+                              'username' => 'vimes',
+                              'roles'    => ['captain'],
+                              'details'  => ['gender' => 'male'],
+                          ]
+                      );
+        $this->session->expects(self::atLeastOnce())
+                      ->method('regenerate');
 
-        $this->request
-            ->getAttribute('session')
-            ->willReturn($this->session->reveal());
-        $this->request
-            ->getMethod()
-            ->willReturn('POST');
-        $this->request
-            ->getParsedBody()
-            ->willReturn([
-                'username' => 'foo',
-                'password' => 'bar',
-            ]);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getAttribute')
+                      ->with('session')
+                      ->willReturn($this->session);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getMethod')
+                      ->willReturn('POST');
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getParsedBody')
+                      ->willReturn(
+                          [
+                              'username' => 'foo',
+                              'password' => 'bar',
+                          ]
+                      );
 
-        $this->authenticatedUser
-            ->getIdentity()
-            ->willReturn('vimes');
-        $this->authenticatedUser
-            ->getRoles()
-            ->willReturn(['captain']);
-        $this->authenticatedUser
-            ->getDetails()
-            ->willReturn(['gender' => 'male']);
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getIdentity')
+                                ->willReturn('vimes');
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getRoles')
+                                ->willReturn(['captain']);
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getDetails')
+                                ->willReturn(['gender' => 'male']);
 
-        $this->userRegister
-            ->authenticate('foo', 'bar')
-            ->willReturn($this->authenticatedUser->reveal());
+        $this->userRegister->expects(self::atLeastOnce())
+                           ->method('authenticate')
+                           ->with('foo', 'bar')
+                           ->willReturn($this->authenticatedUser);
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             $this->defaultConfig,
             $this->responseFactory,
             $this->userFactory
         );
 
-        $result = $phpSession->authenticate($this->request->reveal());
+        $result = $phpSession->authenticate($this->request);
 
-        $this->assertSame($this->authenticatedUser->reveal(), $result);
+        $this->assertSame($this->authenticatedUser, $result);
     }
 
-    public function testAuthenticationWithNoSessionUserViaPostWithCustomFieldsCanHaveSuccessfulResult()
+    public function testAuthenticationWithNoSessionUserViaPostWithCustomFieldsCanHaveSuccessfulResult(): void
     {
-        $this->session
-            ->has(UserInterface::class)
-            ->willReturn(false);
-        $this->session
-            ->set(UserInterface::class, [
-                'username' => 'foo',
-                'roles'    => [],
-                'details'  => [],
-            ])
-            ->shouldBeCalled();
-        $this->session
-            ->regenerate()
-            ->shouldBeCalled();
+        $this->session->expects(self::atLeastOnce())
+                      ->method('has')
+                      ->with(UserInterface::class)
+                      ->willReturn(false);
+        $this->session->expects(self::atLeastOnce())
+                      ->method('set')
+                      ->with(
+                          UserInterface::class,
+                          [
+                              'username' => 'foo',
+                              'roles'    => [],
+                              'details'  => [],
+                          ]
+                      );
+        $this->session->expects(self::atLeastOnce())
+                      ->method('regenerate');
 
-        $this->request
-            ->getAttribute('session')
-            ->willReturn($this->session->reveal());
-        $this->request
-            ->getMethod()
-            ->willReturn('POST');
-        $this->request
-            ->getParsedBody()
-            ->willReturn([
-                'user' => 'foo',
-                'pass' => 'bar',
-            ]);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getAttribute')
+                      ->with('session')
+                      ->willReturn($this->session);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getMethod')
+                      ->willReturn('POST');
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getParsedBody')
+                      ->willReturn(
+                          [
+                              'user' => 'foo',
+                              'pass' => 'bar',
+                          ]
+                      );
 
-        $this->userRegister
-            ->authenticate('foo', 'bar')
-            ->willReturn($this->authenticatedUser->reveal());
+        $this->userRegister->expects(self::atLeastOnce())
+                           ->method('authenticate')
+                           ->with('foo', 'bar')
+                           ->willReturn($this->authenticatedUser);
 
-        $this->authenticatedUser
-            ->getIdentity()
-            ->willReturn('foo');
-        $this->authenticatedUser
-            ->getRoles()
-            ->willReturn([]);
-        $this->authenticatedUser
-            ->getDetails()
-            ->willReturn([]);
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getIdentity')
+                                ->willReturn('foo');
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getRoles')
+                                ->willReturn([]);
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getDetails')
+                                ->willReturn([]);
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             [
                 'username' => 'user',
                 'password' => 'pass',
@@ -248,36 +252,41 @@ class PhpSessionTest extends TestCase
             $this->userFactory
         );
 
-        $result = $phpSession->authenticate($this->request->reveal());
+        $result = $phpSession->authenticate($this->request);
 
-        $this->assertSame($this->authenticatedUser->reveal(), $result);
+        $this->assertSame($this->authenticatedUser, $result);
     }
 
-    public function testCanAuthenticateUserProvidedViaSession()
+    public function testCanAuthenticateUserProvidedViaSession(): void
     {
-        $this->session
-            ->has(UserInterface::class)
-            ->willReturn(true);
-        $this->session
-            ->get(UserInterface::class)
-            ->willReturn([
-                'username' => 'vimes',
-                'roles'    => ['captain'],
-                'details'  => ['gender' => 'male'],
-            ]);
+        $this->session->expects(self::atLeastOnce())
+                      ->method('has')
+                      ->with(UserInterface::class)
+                      ->willReturn(true);
+        $this->session->expects(self::atLeastOnce())
+                      ->method('get')
+                      ->with(UserInterface::class)
+                      ->willReturn(
+                          [
+                              'username' => 'vimes',
+                              'roles'    => ['captain'],
+                              'details'  => ['gender' => 'male'],
+                          ]
+                      );
 
-        $this->request
-            ->getAttribute('session')
-            ->willReturn($this->session->reveal());
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getAttribute')
+                      ->with('session')
+                      ->willReturn($this->session);
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             $this->defaultConfig,
             $this->responseFactory,
             $this->userFactory
         );
 
-        $result = $phpSession->authenticate($this->request->reveal());
+        $result = $phpSession->authenticate($this->request);
 
         $this->assertInstanceOf(UserInterface::class, $result);
         $this->assertSame('vimes', $result->getIdentity());
@@ -286,100 +295,115 @@ class PhpSessionTest extends TestCase
         $this->assertSame('male', $result->getDetail('gender'));
     }
 
-    public function testAuthenticationWhenSessionUserIsOfIncorrectTypeResultsInUnsuccessfulAuthentication()
+    public function testAuthenticationWhenSessionUserIsOfIncorrectTypeResultsInUnsuccessfulAuthentication(): void
     {
-        $this->session
-            ->has(UserInterface::class)
-            ->willReturn(true);
-        $this->session
-            ->get(UserInterface::class)
-            ->willReturn('foo');
+        $this->session->expects(self::atLeastOnce())
+                      ->method('has')
+                      ->with(UserInterface::class)
+                      ->willReturn(true);
+        $this->session->expects(self::atLeastOnce())
+                      ->method('get')
+                      ->with(UserInterface::class)
+                      ->willReturn('foo');
 
-        $this->request->getAttribute('session')->willReturn($this->session->reveal());
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getAttribute')
+                      ->with('session')
+                      ->willReturn($this->session);
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             $this->defaultConfig,
             $this->responseFactory,
             $this->userFactory
         );
 
-        $this->assertNull($phpSession->authenticate($this->request->reveal()));
+        $this->assertNull($phpSession->authenticate($this->request));
     }
 
-    public function testUnauthorizedResponse()
+    public function testUnauthorizedResponse(): void
     {
-        $this->responsePrototype
-            ->getHeader('Location')
-            ->willReturn(['/login']);
-        $this->responsePrototype
-            ->withHeader('Location', '/login')
-            ->willReturn($this->responsePrototype->reveal());
-        $this->responsePrototype
-            ->withStatus(302)
-            ->willReturn($this->responsePrototype->reveal());
+        $this->responsePrototype->expects(self::atLeastOnce())
+                                ->method('getHeader')
+                                ->with('Location')
+                                ->willReturn(['/login']);
+        $this->responsePrototype->expects(self::atLeastOnce())
+                                ->method('withHeader')
+                                ->with('Location', '/login')
+                                ->willReturn($this->responsePrototype);
+        $this->responsePrototype->expects(self::atLeastOnce())
+                                ->method('withStatus')
+                                ->with(302)
+                                ->willReturn($this->responsePrototype);
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             ['redirect' => '/login'],
             $this->responseFactory,
             $this->userFactory
         );
 
-        $result = $phpSession->unauthorizedResponse($this->request->reveal());
+        $result = $phpSession->unauthorizedResponse($this->request);
         $this->assertInstanceOf(ResponseInterface::class, $result);
         $this->assertEquals(['/login'], $result->getHeader('Location'));
     }
 
-    public function testIterableRolesWillBeConvertedToArray()
+    public function testIterableRolesWillBeConvertedToArray(): void
     {
         $roleGenerator = function () {
             yield 'captain';
         };
 
-        $this->session
-            ->has(UserInterface::class)
-            ->willReturn(false);
-        $this->session
-            ->set(UserInterface::class, [
-                'username' => 'foo',
-                'roles'    => ['captain'],
-                'details'  => [],
-            ])
-            ->shouldBeCalled();
-        $this->session
-            ->regenerate()
-            ->shouldBeCalled();
+        $this->session->expects(self::atLeastOnce())
+                      ->method('has')
+                      ->with(UserInterface::class)
+                      ->willReturn(false);
+        $this->session->expects(self::atLeastOnce())
+                      ->method('set')
+                      ->with(
+                          UserInterface::class,
+                          [
+                              'username' => 'foo',
+                              'roles'    => ['captain'],
+                              'details'  => [],
+                          ]
+                      );
+        $this->session->expects(self::atLeastOnce())
+                      ->method('regenerate');
 
-        $this->request
-            ->getAttribute('session')
-            ->willReturn($this->session->reveal());
-        $this->request
-            ->getMethod()
-            ->willReturn('POST');
-        $this->request
-            ->getParsedBody()
-            ->willReturn([
-                'user' => 'foo',
-                'pass' => 'bar',
-            ]);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getAttribute')
+                      ->with('session')
+                      ->willReturn($this->session);
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getMethod')
+                      ->willReturn('POST');
+        $this->request->expects(self::atLeastOnce())
+                      ->method('getParsedBody')
+                      ->willReturn(
+                          [
+                              'user' => 'foo',
+                              'pass' => 'bar',
+                          ]
+                      );
 
-        $this->userRegister
-            ->authenticate('foo', 'bar')
-            ->willReturn($this->authenticatedUser->reveal());
+        $this->userRegister->expects(self::atLeastOnce())
+                           ->method('authenticate')
+                           ->with('foo', 'bar')
+                           ->willReturn($this->authenticatedUser);
 
-        $this->authenticatedUser
-            ->getIdentity()
-            ->willReturn('foo');
-        $this->authenticatedUser
-            ->getRoles()
-            ->willReturn($roleGenerator());
-        $this->authenticatedUser
-            ->getDetails()
-            ->willReturn([]);
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getIdentity')
+                                ->willReturn('foo');
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getRoles')
+                                ->willReturn($roleGenerator());
+        $this->authenticatedUser->expects(self::atLeastOnce())
+                                ->method('getDetails')
+                                ->willReturn([]);
 
         $phpSession = new PhpSession(
-            $this->userRegister->reveal(),
+            $this->userRegister,
             [
                 'username' => 'user',
                 'password' => 'pass',
@@ -388,8 +412,24 @@ class PhpSessionTest extends TestCase
             $this->userFactory
         );
 
-        $result = $phpSession->authenticate($this->request->reveal());
+        $result = $phpSession->authenticate($this->request);
 
-        $this->assertSame($this->authenticatedUser->reveal(), $result);
+        $this->assertSame($this->authenticatedUser, $result);
+    }
+
+    protected function setUp(): void
+    {
+        $this->request           = $this->createMock(ServerRequestInterface::class);
+        $this->userRegister      = $this->createMock(UserRepositoryInterface::class);
+        $this->authenticatedUser = $this->createMock(UserInterface::class);
+        $this->responsePrototype = $this->createMock(ResponseInterface::class);
+        $this->responseFactory   = function () {
+            return $this->responsePrototype;
+        };
+        $this->userFactory       = function (string $identity, array $roles = [], array $details = []): UserInterface {
+            return new DefaultUser($identity, $roles, $details);
+        };
+        $this->session       = $this->createMock(SessionInterface::class);
+        $this->defaultConfig = (new ConfigProvider())()['authentication'];
     }
 }

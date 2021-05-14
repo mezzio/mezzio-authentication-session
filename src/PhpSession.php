@@ -20,28 +20,21 @@ use Psr\Http\Message\ServerRequestInterface;
 use Traversable;
 
 use function is_array;
+use function iterator_to_array;
 use function strtoupper;
 
 class PhpSession implements AuthenticationInterface
 {
-    /**
-     * @var UserRepositoryInterface
-     */
+    /** @var UserRepositoryInterface */
     private $repository;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $config;
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $responseFactory;
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $userFactory;
 
     public function __construct(
@@ -54,7 +47,7 @@ class PhpSession implements AuthenticationInterface
         $this->config     = $config;
 
         // Ensures type safety of the composed factory
-        $this->responseFactory = function () use ($responseFactory) : ResponseInterface {
+        $this->responseFactory = function () use ($responseFactory): ResponseInterface {
             return $responseFactory();
         };
 
@@ -63,7 +56,7 @@ class PhpSession implements AuthenticationInterface
             string $identity,
             array $roles = [],
             array $details = []
-        ) use ($userFactory) : UserInterface {
+        ) use ($userFactory): UserInterface {
             return $userFactory($identity, $roles, $details);
         };
     }
@@ -71,7 +64,7 @@ class PhpSession implements AuthenticationInterface
     /**
      * {@inheritDoc}
      */
-    public function authenticate(ServerRequestInterface $request) : ?UserInterface
+    public function authenticate(ServerRequestInterface $request): ?UserInterface
     {
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
         if (! $session) {
@@ -110,7 +103,7 @@ class PhpSession implements AuthenticationInterface
         return $user;
     }
 
-    public function unauthorizedResponse(ServerRequestInterface $request) : ResponseInterface
+    public function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface
     {
         return ($this->responseFactory)()
             ->withHeader(
@@ -127,7 +120,7 @@ class PhpSession implements AuthenticationInterface
      * we need to create a UserInterface instance based on the data stored in
      * the session instead.
      */
-    private function createUserFromSession(SessionInterface $session) : ?UserInterface
+    private function createUserFromSession(SessionInterface $session): ?UserInterface
     {
         $userInfo = $session->get(UserInterface::class);
         if (! is_array($userInfo) || ! isset($userInfo['username'])) {
@@ -142,7 +135,7 @@ class PhpSession implements AuthenticationInterface
     /**
      * Convert the iterable user roles to a Traversable.
      */
-    private function getUserRoles(UserInterface $user) : Traversable
+    private function getUserRoles(UserInterface $user): Traversable
     {
         return yield from $user->getRoles();
     }
