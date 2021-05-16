@@ -34,7 +34,7 @@
         "psr/http-message": "^1.0.1"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "~2.1.0",
+        "laminas/laminas-coding-standard": "~2.2.0",
         "phpunit/phpunit": "^9.3"
     },
     "autoload": {
