@@ -1,7 +1,6 @@
 {
     "name": "mezzio/mezzio-authentication-session",
     "description": "Username/password, session-backed authentication adapter for mezzio-authentication.",
-    "license": "BSD-3-Clause",
     "keywords": [
         "laminas",
         "mezzio",
@@ -9,22 +8,7 @@
         "session"
     ],
     "homepage": "https://mezzio.dev",
-    "support": {
-        "docs": "https://docs.mezzio.dev/mezzio-authentication-session/",
-        "issues": "https://github.com/mezzio/mezzio-authentication-session/issues",
-        "source": "https://github.com/mezzio/mezzio-authentication-session",
-        "rss": "https://github.com/mezzio/mezzio-authentication-session/releases.atom",
-        "chat": "https://laminas.dev/chat",
-        "forum": "https://discourse.laminas.dev"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laminas": {
-            "config-provider": "Mezzio\\Authentication\\Session\\ConfigProvider"
-        }
-    },
+    "license": "BSD-3-Clause",
     "require": {
         "php": "^7.3 || ~8.0.0",
         "laminas/laminas-zendframework-bridge": "^1.0",
@@ -33,9 +17,20 @@
         "psr/container": "^1.0",
         "psr/http-message": "^1.0.1"
     },
+    "replace": {
+        "zendframework/zend-expressive-authentication-session": "^1.0.1"
+    },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.1.0",
         "phpunit/phpunit": "^9.3"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laminas": {
+            "config-provider": "Mezzio\\Authentication\\Session\\ConfigProvider"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -57,7 +52,12 @@
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
-    "replace": {
-        "zendframework/zend-expressive-authentication-session": "^1.0.1"
+    "support": {
+        "issues": "https://github.com/mezzio/mezzio-authentication-session/issues",
+        "forum": "https://discourse.laminas.dev",
+        "chat": "https://laminas.dev/chat",
+        "source": "https://github.com/mezzio/mezzio-authentication-session",
+        "docs": "https://docs.mezzio.dev/mezzio-authentication-session/",
+        "rss": "https://github.com/mezzio/mezzio-authentication-session/releases.atom"
     }
 }
