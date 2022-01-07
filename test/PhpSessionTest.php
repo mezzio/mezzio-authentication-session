@@ -423,7 +423,7 @@ class PhpSessionTest extends TestCase
         $this->userFactory       = function (string $identity, array $roles = [], array $details = []): UserInterface {
             return new DefaultUser($identity, $roles, $details);
         };
-        $this->session       = $this->createMock(SessionInterface::class);
-        $this->defaultConfig = (new ConfigProvider())()['authentication'];
+        $this->session           = $this->createMock(SessionInterface::class);
+        $this->defaultConfig     = (new ConfigProvider())()['authentication'];
     }
 }
