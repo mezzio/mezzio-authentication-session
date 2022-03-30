@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MezzioTest\Authentication\Session;
+namespace MezzioTest\Authentication\Session\TestAsset;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -10,16 +10,15 @@ use RuntimeException;
 
 use function array_key_exists;
 
-final class InMemoryContainer implements ContainerInterface
+final class InMemoryContainerPSR11V2 implements ContainerInterface
 {
     /** @var array<string,mixed> */
     private $services = [];
 
     /**
-     * @param string $id
      * @return mixed
      */
-    public function get($id)
+    public function get(string $id)
     {
         if (! $this->has($id)) {
             throw new class ($id . ' was not found') extends RuntimeException implements NotFoundExceptionInterface {
@@ -29,11 +28,7 @@ final class InMemoryContainer implements ContainerInterface
         return $this->services[$id];
     }
 
-    /**
-     * @param string $id
-     * @return bool
-     */
-    public function has($id)
+    public function has(string $id): bool
     {
         return array_key_exists($id, $this->services);
     }

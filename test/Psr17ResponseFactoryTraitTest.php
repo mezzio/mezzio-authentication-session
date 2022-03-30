@@ -68,7 +68,9 @@ final class Psr17ResponseFactoryTraitTest extends TestCase
     public function testWillUseResponseFactoryInterfaceFromContainerWhenApplicationFactoryIsNotOverridden(): void
     {
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
-        $container       = new InMemoryContainer();
+
+        // phpcs:ignore WebimpressCodingStandard.PHP.CorrectClassNameCase.Invalid
+        $container = new TestAsset\InMemoryContainer();
         $container->set('config', [
             'dependencies' => [
                 'factories' => [
@@ -89,7 +91,9 @@ final class Psr17ResponseFactoryTraitTest extends TestCase
         array $config
     ): void {
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
-        $container       = new InMemoryContainer();
+
+        // phpcs:ignore WebimpressCodingStandard.PHP.CorrectClassNameCase.Invalid
+        $container = new TestAsset\InMemoryContainer();
         $container->set('config', $config);
         $container->set(ResponseFactoryInterface::class, $responseFactory);
         $response = $this->createMock(ResponseInterface::class);

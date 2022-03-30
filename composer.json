@@ -50,6 +50,9 @@
         }
     },
     "autoload-dev": {
+        "files": [
+            "test/autoload.php"
+        ],
         "psr-4": {
             "MezzioTest\\Authentication\\Session\\": "test/"
         }

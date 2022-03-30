@@ -14,6 +14,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class PhpSessionFactoryTest extends TestCase
@@ -66,6 +67,8 @@ class PhpSessionFactoryTest extends TestCase
             ->expects(self::atLeastOnce())
             ->method('has')
             ->willReturnMap([
+                ['config', true],
+                [ResponseFactoryInterface::class, false],
                 [UserRepositoryInterface::class, true],
                 [UserInterface::class, true],
             ]);
