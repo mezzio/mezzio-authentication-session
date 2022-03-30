@@ -14,8 +14,8 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use ReflectionProperty;
 
 class PhpSessionFactoryTest extends TestCase
 {
@@ -45,19 +45,17 @@ class PhpSessionFactoryTest extends TestCase
 
     public function testInvokeWithContainerEmptyConfig(): void
     {
-        $this->container->expects(self::atLeastOnce())
-                        ->method('has')
-                        ->willReturn(true);
-        $this->container->expects(self::atLeastOnce())
-                        ->method('get')
-                        ->willReturnMap(
-                            [
-                                ['config', []],
-                                [UserRepositoryInterface::class, $this->userRegister],
-                                [ResponseInterface::class, $this->responseFactory],
-                                [UserInterface::class, $this->userFactory],
-                            ]
-                        );
+        $this->container
+            ->expects(self::once())
+            ->method('has')
+            ->with(UserRepositoryInterface::class)
+            ->willReturn(true);
+
+        $this->container
+            ->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn([]);
 
         $this->expectException(InvalidConfigException::class);
         ($this->factory)($this->container);
@@ -65,31 +63,36 @@ class PhpSessionFactoryTest extends TestCase
 
     public function testInvokeWithContainerAndConfig(): void
     {
-        $this->container->expects(self::atLeastOnce())
-                        ->method('has')
-                        ->willReturn(true);
-        $this->container->expects(self::atLeastOnce())
-                        ->method('get')
-                        ->willReturnMap(
-                            [
-                                ['config', ['authentication' => ['redirect' => '/login']]],
-                                [UserRepositoryInterface::class, $this->userRegister],
-                                [ResponseInterface::class, $this->responseFactory],
-                                [UserInterface::class, $this->userFactory],
-                            ]
-                        );
+        $this->container
+            ->expects(self::atLeastOnce())
+            ->method('has')
+            ->willReturnMap([
+                ['config', true],
+                [ResponseFactoryInterface::class, false],
+                [UserRepositoryInterface::class, true],
+                [UserInterface::class, true],
+            ]);
+
+        $this->container
+            ->expects(self::atLeastOnce())
+            ->method('get')
+            ->willReturnMap(
+                [
+                    ['config', ['authentication' => ['redirect' => '/login']]],
+                    [UserRepositoryInterface::class, $this->userRegister],
+                    [ResponseInterface::class, $this->responseFactory],
+                    [UserInterface::class, $this->userFactory],
+                ]
+            );
 
         $phpSession = ($this->factory)($this->container);
-        $this->assertInstanceOf(PhpSession::class, $phpSession);
         self::assertResponseFactoryReturns($this->responsePrototype, $phpSession);
     }
 
     public static function assertResponseFactoryReturns(ResponseInterface $expected, PhpSession $service): void
     {
-        $r = new ReflectionProperty($service, 'responseFactory');
-        $r->setAccessible(true);
-        $responseFactory = $r->getValue($service);
-        Assert::assertSame($expected, $responseFactory());
+        $responseFactory = $service->getResponseFactory();
+        Assert::assertSame($expected, $responseFactory->getResponseFromCallable());
     }
 
     protected function setUp(): void

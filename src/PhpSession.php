@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace Mezzio\Authentication\Session;
 
 use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\Session\Response\CallableResponseFactoryDecorator;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Traversable;
 
 use function is_array;
+use function is_callable;
 use function iterator_to_array;
 use function strtoupper;
 
@@ -25,28 +28,37 @@ class PhpSession implements AuthenticationInterface
     /** @var array */
     private $config;
 
-    /** @var callable */
+    /** @var ResponseFactoryInterface */
     private $responseFactory;
 
     /** @var callable */
     private $userFactory;
 
+    /**
+     * @param (callable():ResponseInterface)|ResponseFactoryInter $responseFactory
+     */
     public function __construct(
         UserRepositoryInterface $repository,
         array $config,
-        callable $responseFactory,
+        $responseFactory,
         callable $userFactory
     ) {
         $this->repository = $repository;
         $this->config     = $config;
 
-        // Ensures type safety of the composed factory
-        $this->responseFactory = function () use ($responseFactory): ResponseInterface {
-            return $responseFactory();
-        };
+        if (is_callable($responseFactory)) {
+            // Ensures type safety of the composed factory
+            $responseFactory = new CallableResponseFactoryDecorator(
+                static function () use ($responseFactory): ResponseInterface {
+                    return $responseFactory();
+                }
+            );
+        }
+
+        $this->responseFactory = $responseFactory;
 
         // Ensures type safety of the composed factory
-        $this->userFactory = function (
+        $this->userFactory = static function (
             string $identity,
             array $roles = [],
             array $details = []
@@ -99,12 +111,12 @@ class PhpSession implements AuthenticationInterface
 
     public function unauthorizedResponse(ServerRequestInterface $request): ResponseInterface
     {
-        return ($this->responseFactory)()
+        return $this->responseFactory
+            ->createResponse(302)
             ->withHeader(
                 'Location',
                 $this->config['redirect']
-            )
-            ->withStatus(302);
+            );
     }
 
     /**
@@ -132,5 +144,13 @@ class PhpSession implements AuthenticationInterface
     private function getUserRoles(UserInterface $user): Traversable
     {
         return yield from $user->getRoles();
+    }
+
+    /**
+     * @internal This should only be used in unit tests.
+     */
+    public function getResponseFactory(): ResponseFactoryInterface
+    {
+        return $this->responseFactory;
     }
 }

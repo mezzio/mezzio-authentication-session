@@ -8,15 +8,23 @@ use Mezzio\Authentication\Exception;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
 
 class PhpSessionFactory
 {
+    use Psr17ResponseFactoryTrait;
+
     public function __invoke(ContainerInterface $container): PhpSession
     {
+        $hasUserRepository           = $container->has(UserRepositoryInterface::class);
+        $hasDeprecatedUserRepository = false;
+        if (! $hasUserRepository) {
+            $hasDeprecatedUserRepository = $container->has(
+                \Zend\Expressive\Authentication\UserRepositoryInterface::class
+            );
+        }
         if (
-            ! $container->has(UserRepositoryInterface::class)
-            && ! $container->has(\Zend\Expressive\Authentication\UserRepositoryInterface::class)
+            ! $hasUserRepository
+            && ! $hasDeprecatedUserRepository
         ) {
             throw new Exception\InvalidConfigException(
                 'UserRepositoryInterface service is missing for authentication'
@@ -31,9 +39,15 @@ class PhpSessionFactory
             );
         }
 
+        $hasUser           = $container->has(UserInterface::class);
+        $hasDeprecatedUser = false;
+        if (! $hasUser) {
+            $hasDeprecatedUser = $container->has(\Zend\Expressive\Authentication\UserInterface::class);
+        }
+
         if (
-            ! $container->has(UserInterface::class)
-            && ! $container->has(\Zend\Expressive\Authentication\UserInterface::class)
+            ! $hasUser
+            && ! $hasDeprecatedUser
         ) {
             throw new Exception\InvalidConfigException(
                 'UserInterface factory service is missing for authentication'
@@ -41,12 +55,12 @@ class PhpSessionFactory
         }
 
         return new PhpSession(
-            $container->has(UserRepositoryInterface::class)
+            $hasUserRepository
                 ? $container->get(UserRepositoryInterface::class)
                 : $container->get(\Zend\Expressive\Authentication\UserRepositoryInterface::class),
             $config,
-            $container->get(ResponseInterface::class),
-            $container->has(UserInterface::class)
+            $this->detectResponseFactory($container),
+            $hasUser
                 ? $container->get(UserInterface::class)
                 : $container->get(\Zend\Expressive\Authentication\UserInterface::class)
         );
