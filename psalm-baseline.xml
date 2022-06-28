@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.24.0@06dd975cb55d36af80f242561738f16c5f58264f">
+  <file src="src/ConfigProvider.php">
+    <MixedArrayOffset occurrences="1"/>
+    <UndefinedClass occurrences="1">
+      <code>\Zend\Expressive\Authentication\Session\PhpSession</code>
+    </UndefinedClass>
+  </file>
+  <file src="src/PhpSession.php">
+    <MixedArgument occurrences="4">
+      <code>$params[$password]</code>
+      <code>$params[$username]</code>
+      <code>$session</code>
+      <code>$this-&gt;config['redirect']</code>
+    </MixedArgument>
+    <MixedArrayOffset occurrences="2">
+      <code>$params[$password]</code>
+      <code>$params[$username]</code>
+    </MixedArrayOffset>
+    <MixedArrayTypeCoercion occurrences="2">
+      <code>$params[$password]</code>
+      <code>$params[$username]</code>
+    </MixedArrayTypeCoercion>
+    <MixedAssignment occurrences="5">
+      <code>$details</code>
+      <code>$password</code>
+      <code>$roles</code>
+      <code>$session</code>
+      <code>$username</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>?UserInterface</code>
+    </MixedInferredReturnType>
+    <MixedMethodCall occurrences="3">
+      <code>has</code>
+      <code>regenerate</code>
+      <code>set</code>
+    </MixedMethodCall>
+    <MixedReturnStatement occurrences="2">
+      <code>($this-&gt;userFactory)($userInfo['username'], (array) $roles, (array) $details)</code>
+      <code>yield from $user-&gt;getRoles()</code>
+    </MixedReturnStatement>
+    <PropertyNotSetInConstructor occurrences="4">
+      <code>$config</code>
+      <code>$repository</code>
+      <code>$responseFactory</code>
+      <code>$userFactory</code>
+    </PropertyNotSetInConstructor>
+    <UndefinedDocblockClass occurrences="1">
+      <code>(callable():ResponseInterface)|ResponseFactoryInter</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/PhpSessionFactory.php">
+    <DeprecatedTrait occurrences="1">
+      <code>Psr17ResponseFactoryTrait</code>
+    </DeprecatedTrait>
+    <InvalidArgument occurrences="1">
+      <code>$this-&gt;detectResponseFactory($container)</code>
+    </InvalidArgument>
+    <MixedArgument occurrences="6">
+      <code>\Zend\Expressive\Authentication\UserInterface::class</code>
+      <code>\Zend\Expressive\Authentication\UserInterface::class</code>
+      <code>\Zend\Expressive\Authentication\UserRepositoryInterface::class</code>
+      <code>\Zend\Expressive\Authentication\UserRepositoryInterface::class</code>
+    </MixedArgument>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$config</code>
+    </PossiblyInvalidArgument>
+    <UndefinedClass occurrences="4">
+      <code>\Zend\Expressive\Authentication\UserInterface</code>
+      <code>\Zend\Expressive\Authentication\UserInterface</code>
+      <code>\Zend\Expressive\Authentication\UserRepositoryInterface</code>
+      <code>\Zend\Expressive\Authentication\UserRepositoryInterface</code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Psr17ResponseFactoryTrait.php">
+    <DeprecatedClass occurrences="1">
+      <code>new CallableResponseFactoryDecorator($responseFactory)</code>
+    </DeprecatedClass>
+    <InternalClass occurrences="1">
+      <code>new CallableResponseFactoryDecorator($responseFactory)</code>
+    </InternalClass>
+    <UndefinedClass occurrences="1">
+      <code>ResponseFactoryFactory</code>
+    </UndefinedClass>
+  </file>
+  <file src="test/ConfigProviderTest.php">
+    <RedundantCondition occurrences="1">
+      <code>assertIsArray</code>
+    </RedundantCondition>
+  </file>
+  <file src="test/PhpSessionFactoryTest.php">
+    <InternalMethod occurrences="1">
+      <code>getResponseFactory</code>
+    </InternalMethod>
+    <MissingClosureReturnType occurrences="1">
+      <code>function () {</code>
+    </MissingClosureReturnType>
+    <MixedArgumentTypeCoercion occurrences="2">
+      <code>$details</code>
+      <code>$roles</code>
+    </MixedArgumentTypeCoercion>
+    <MixedMethodCall occurrences="10">
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturnMap</code>
+      <code>willReturnMap</code>
+      <code>with</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <PossiblyInvalidArgument occurrences="4">
+      <code>$this-&gt;container</code>
+      <code>$this-&gt;container</code>
+      <code>$this-&gt;container</code>
+      <code>$this-&gt;responsePrototype</code>
+    </PossiblyInvalidArgument>
+    <PossiblyUndefinedMethod occurrences="4">
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>getResponseFromCallable</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="test/PhpSessionTest.php">
+    <MissingClosureReturnType occurrences="2">
+      <code>function () {</code>
+      <code>function () {</code>
+    </MissingClosureReturnType>
+    <MixedArgumentTypeCoercion occurrences="12">
+      <code>$details</code>
+      <code>$roles</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+      <code>$this-&gt;responseFactory</code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment occurrences="1">
+      <code>$this-&gt;defaultConfig</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="114">
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>method</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <PossiblyInvalidArgument occurrences="19">
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;request</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+      <code>$this-&gt;userRegister</code>
+    </PossiblyInvalidArgument>
+    <PossiblyUndefinedMethod occurrences="47">
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+      <code>expects</code>
+    </PossiblyUndefinedMethod>
+  </file>
+  <file src="test/Psr17ResponseFactoryTraitTest.php">
+    <DeprecatedClass occurrences="1">
+      <code>CallableResponseFactoryDecorator::class</code>
+    </DeprecatedClass>
+    <InternalMethod occurrences="1">
+      <code>getResponseFromCallable</code>
+    </InternalMethod>
+    <UndefinedClass occurrences="1">
+      <code>ResponseFactoryFactory</code>
+    </UndefinedClass>
+  </file>
+  <file src="test/TestAsset/InMemoryContainerPSR11V1.php">
+    <MethodSignatureMismatch occurrences="1">
+      <code>InMemoryContainerPSR11V1</code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="test/TestAsset/Psr17ResponseFactoryTraitImplementation.php">
+    <DeprecatedTrait occurrences="1">
+      <code>Psr17ResponseFactoryTrait</code>
+    </DeprecatedTrait>
+  </file>
+</files>
