@@ -13,7 +13,7 @@ use function array_key_exists;
 final class InMemoryContainerPSR11V1 implements ContainerInterface
 {
     /** @var array<string,mixed> */
-    private $services = [];
+    private array $services = [];
 
     /**
      * @param string $id

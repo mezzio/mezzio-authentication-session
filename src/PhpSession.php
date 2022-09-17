@@ -22,14 +22,11 @@ use function strtoupper;
 
 class PhpSession implements AuthenticationInterface
 {
-    /** @var UserRepositoryInterface */
-    private $repository;
+    private UserRepositoryInterface $repository;
 
-    /** @var array */
-    private $config;
+    private array $config;
 
-    /** @var ResponseFactoryInterface */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
     /** @var callable */
     private $userFactory;
@@ -49,22 +46,15 @@ class PhpSession implements AuthenticationInterface
         if (is_callable($responseFactory)) {
             // Ensures type safety of the composed factory
             $responseFactory = new CallableResponseFactoryDecorator(
-                static function () use ($responseFactory): ResponseInterface {
-                    return $responseFactory();
-                }
+                static fn(): ResponseInterface => $responseFactory()
             );
         }
 
         $this->responseFactory = $responseFactory;
 
         // Ensures type safety of the composed factory
-        $this->userFactory = static function (
-            string $identity,
-            array $roles = [],
-            array $details = []
-        ) use ($userFactory): UserInterface {
-            return $userFactory($identity, $roles, $details);
-        };
+        $this->userFactory = static fn(string $identity, array $roles = [], array $details = []): UserInterface
+            => $userFactory($identity, $roles, $details);
     }
 
     /**
