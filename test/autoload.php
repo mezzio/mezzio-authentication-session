@@ -6,7 +6,7 @@ use MezzioTest\Authentication\Session\TestAsset\InMemoryContainerPSR11V1;
 use MezzioTest\Authentication\Session\TestAsset\InMemoryContainerPSR11V2;
 use Psr\Container\ContainerInterface;
 
-(function () {
+(static function () {
     $r      = new ReflectionMethod(ContainerInterface::class, 'has');
     $params = $r->getParameters();
     $id     = array_shift($params);

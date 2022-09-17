@@ -93,8 +93,8 @@
     <InternalMethod occurrences="1">
       <code>getResponseFactory</code>
     </InternalMethod>
-    <MissingClosureReturnType occurrences="1">
-      <code>function () {</code>
+    <MissingClosureReturnType occurrences="2">
+      <code>fn()</code>
     </MissingClosureReturnType>
     <MixedArgumentTypeCoercion occurrences="2">
       <code>$details</code>
@@ -130,8 +130,7 @@
   </file>
   <file src="test/PhpSessionTest.php">
     <MissingClosureReturnType occurrences="2">
-      <code>function () {</code>
-      <code>function () {</code>
+      <code>fn()</code>
     </MissingClosureReturnType>
     <MixedArgumentTypeCoercion occurrences="12">
       <code>$details</code>

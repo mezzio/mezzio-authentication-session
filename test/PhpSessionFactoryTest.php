@@ -22,8 +22,7 @@ class PhpSessionFactoryTest extends TestCase
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
-    /** @var PhpSessionFactory */
-    private $factory;
+    private PhpSessionFactory $factory;
 
     /** @var UserRepositoryInterface|ObjectProphecy */
     private $userRegister;
@@ -101,11 +100,8 @@ class PhpSessionFactoryTest extends TestCase
         $this->factory           = new PhpSessionFactory();
         $this->userRegister      = $this->createMock(UserRepositoryInterface::class);
         $this->responsePrototype = $this->createMock(ResponseInterface::class);
-        $this->responseFactory   = function () {
-            return $this->responsePrototype;
-        };
-        $this->userFactory       = function (string $identity, array $roles = [], array $details = []): UserInterface {
-            return new DefaultUser($identity, $roles, $details);
-        };
+        $this->responseFactory   = fn() => $this->responsePrototype;
+        $this->userFactory       = static fn(string $identity, array $roles = [], array $details = []): UserInterface
+             => new DefaultUser($identity, $roles, $details);
     }
 }
