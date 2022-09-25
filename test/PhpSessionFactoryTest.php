@@ -11,23 +11,23 @@ use Mezzio\Authentication\Session\PhpSessionFactory;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class PhpSessionFactoryTest extends TestCase
 {
-    /** @var ContainerInterface|ObjectProphecy */
+    /** @var ContainerInterface&MockObject */
     private $container;
 
     private PhpSessionFactory $factory;
 
-    /** @var UserRepositoryInterface|ObjectProphecy */
+    /** @var UserRepositoryInterface&MockObject */
     private $userRegister;
 
-    /** @var ResponseInterface|ObjectProphecy */
+    /** @var ResponseInterface&MockObject */
     private $responsePrototype;
 
     /** @var callable */
