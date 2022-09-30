@@ -13,23 +13,23 @@ use Mezzio\Authentication\Session\PhpSession;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
 use Mezzio\Session\SessionInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class PhpSessionTest extends TestCase
 {
-    /** @var ServerRequestInterface|ObjectProphecy */
+    /** @var ServerRequestInterface&MockObject */
     private $request;
 
-    /** @var UserRepositoryInterface|ObjectProphecy */
+    /** @var UserRepositoryInterface&MockObject */
     private $userRegister;
 
-    /** @var UserInterface|ObjectProphecy */
+    /** @var UserInterface&MockObject */
     private $authenticatedUser;
 
-    /** @var ResponseInterface|ObjectProphecy */
+    /** @var ResponseInterface&MockObject */
     private $responsePrototype;
 
     /** @var callable */
@@ -38,7 +38,7 @@ class PhpSessionTest extends TestCase
     /** @var callable */
     private $userFactory;
 
-    /** @var SessionInterface|ObjectProphecy */
+    /** @var SessionInterface&MockObject */
     private $session;
 
     /** @var array */
