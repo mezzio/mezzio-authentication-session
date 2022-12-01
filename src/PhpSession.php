@@ -32,7 +32,8 @@ class PhpSession implements AuthenticationInterface
     private $userFactory;
 
     /**
-     * @param (callable():ResponseInterface)|ResponseFactoryInter $responseFactory
+     * @param callable():ResponseInterface|ResponseFactoryInterface $responseFactory
+     * @param callable(string, array, array): UserInterface $userFactory
      */
     public function __construct(
         UserRepositoryInterface $repository,
