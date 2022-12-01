@@ -15,6 +15,7 @@ use Mezzio\Authentication\UserRepositoryInterface;
 use Mezzio\Session\SessionInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -32,10 +33,10 @@ class PhpSessionTest extends TestCase
     /** @var ResponseInterface&MockObject */
     private $responsePrototype;
 
-    /** @var callable */
+    /** @var callable():ResponseInterface|ResponseFactoryInterface */
     private $responseFactory;
 
-    /** @var callable */
+    /** @var callable(string, array, array): UserInterface */
     private $userFactory;
 
     /** @var SessionInterface&MockObject */
@@ -43,6 +44,19 @@ class PhpSessionTest extends TestCase
 
     /** @var array */
     private $defaultConfig;
+
+    protected function setUp(): void
+    {
+        $this->request           = $this->createMock(ServerRequestInterface::class);
+        $this->userRegister      = $this->createMock(UserRepositoryInterface::class);
+        $this->authenticatedUser = $this->createMock(UserInterface::class);
+        $this->responsePrototype = $this->createMock(ResponseInterface::class);
+        $this->responseFactory   = fn(): ResponseInterface => $this->responsePrototype;
+        $this->userFactory       = static fn(string $identity, array $roles = [], array $details = []): UserInterface
+            => new DefaultUser($identity, $roles, $details);
+        $this->session           = $this->createMock(SessionInterface::class);
+        $this->defaultConfig     = (new ConfigProvider())()['authentication'];
+    }
 
     public function testConstructor(): void
     {
@@ -410,18 +424,5 @@ class PhpSessionTest extends TestCase
         $result = $phpSession->authenticate($this->request);
 
         $this->assertSame($this->authenticatedUser, $result);
-    }
-
-    protected function setUp(): void
-    {
-        $this->request           = $this->createMock(ServerRequestInterface::class);
-        $this->userRegister      = $this->createMock(UserRepositoryInterface::class);
-        $this->authenticatedUser = $this->createMock(UserInterface::class);
-        $this->responsePrototype = $this->createMock(ResponseInterface::class);
-        $this->responseFactory   = fn() => $this->responsePrototype;
-        $this->userFactory       = static fn(string $identity, array $roles = [], array $details = []): UserInterface
-            => new DefaultUser($identity, $roles, $details);
-        $this->session           = $this->createMock(SessionInterface::class);
-        $this->defaultConfig     = (new ConfigProvider())()['authentication'];
     }
 }
