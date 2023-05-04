@@ -33,7 +33,7 @@ class PhpSessionTest extends TestCase
     /** @var ResponseInterface&MockObject */
     private $responsePrototype;
 
-    /** @var callable():ResponseInterface|ResponseFactoryInterface */
+    /** @var (callable():ResponseInterface)|ResponseFactoryInterface */
     private $responseFactory;
 
     /** @var callable(string, array, array): UserInterface */
@@ -66,7 +66,7 @@ class PhpSessionTest extends TestCase
             $this->responseFactory,
             $this->userFactory
         );
-        $this->assertInstanceOf(AuthenticationInterface::class, $phpSession);
+        self::assertInstanceOf(AuthenticationInterface::class, $phpSession);
     }
 
     public function testAuthenticationWithMissingSessionAttributeRaisesException(): void
@@ -108,7 +108,7 @@ class PhpSessionTest extends TestCase
             $this->userFactory
         );
 
-        $this->assertNull($phpSession->authenticate($this->request));
+        self::assertNull($phpSession->authenticate($this->request));
     }
 
     public function testAuthenticationWithNoSessionUserViaPostWithNoDataReturnsNull(): void
@@ -136,7 +136,7 @@ class PhpSessionTest extends TestCase
             $this->userFactory
         );
 
-        $this->assertNull($phpSession->authenticate($this->request));
+        self::assertNull($phpSession->authenticate($this->request));
     }
 
     public function testAuthenticationWithNoSessionUserViaPostWithDefaultFieldsCanHaveSuccessfulResult(): void
@@ -198,7 +198,7 @@ class PhpSessionTest extends TestCase
 
         $result = $phpSession->authenticate($this->request);
 
-        $this->assertSame($this->authenticatedUser, $result);
+        self::assertSame($this->authenticatedUser, $result);
     }
 
     public function testAuthenticationWithNoSessionUserViaPostWithCustomFieldsCanHaveSuccessfulResult(): void
@@ -263,7 +263,7 @@ class PhpSessionTest extends TestCase
 
         $result = $phpSession->authenticate($this->request);
 
-        $this->assertSame($this->authenticatedUser, $result);
+        self::assertSame($this->authenticatedUser, $result);
     }
 
     public function testCanAuthenticateUserProvidedViaSession(): void
@@ -297,11 +297,11 @@ class PhpSessionTest extends TestCase
 
         $result = $phpSession->authenticate($this->request);
 
-        $this->assertInstanceOf(UserInterface::class, $result);
-        $this->assertSame('vimes', $result->getIdentity());
-        $this->assertSame(['captain'], $result->getRoles());
-        $this->assertSame(['gender' => 'male'], $result->getDetails());
-        $this->assertSame('male', $result->getDetail('gender'));
+        self::assertInstanceOf(UserInterface::class, $result);
+        self::assertSame('vimes', $result->getIdentity());
+        self::assertSame(['captain'], $result->getRoles());
+        self::assertSame(['gender' => 'male'], $result->getDetails());
+        self::assertSame('male', $result->getDetail('gender'));
     }
 
     public function testAuthenticationWhenSessionUserIsOfIncorrectTypeResultsInUnsuccessfulAuthentication(): void
@@ -327,7 +327,7 @@ class PhpSessionTest extends TestCase
             $this->userFactory
         );
 
-        $this->assertNull($phpSession->authenticate($this->request));
+        self::assertNull($phpSession->authenticate($this->request));
     }
 
     public function testUnauthorizedResponse(): void
@@ -353,8 +353,8 @@ class PhpSessionTest extends TestCase
         );
 
         $result = $phpSession->unauthorizedResponse($this->request);
-        $this->assertInstanceOf(ResponseInterface::class, $result);
-        $this->assertEquals(['/login'], $result->getHeader('Location'));
+        self::assertInstanceOf(ResponseInterface::class, $result);
+        self::assertEquals(['/login'], $result->getHeader('Location'));
     }
 
     public function testIterableRolesWillBeConvertedToArray(): void
@@ -423,6 +423,6 @@ class PhpSessionTest extends TestCase
 
         $result = $phpSession->authenticate($this->request);
 
-        $this->assertSame($this->authenticatedUser, $result);
+        self::assertSame($this->authenticatedUser, $result);
     }
 }
