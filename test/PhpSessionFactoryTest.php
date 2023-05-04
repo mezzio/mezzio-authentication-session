@@ -30,10 +30,10 @@ class PhpSessionFactoryTest extends TestCase
     /** @var ResponseInterface&MockObject */
     private $responsePrototype;
 
-    /** @var callable */
+    /** @var callable(): ResponseInterface */
     private $responseFactory;
 
-    /** @var callable */
+    /** @var callable(string, array, array): UserInterface */
     private $userFactory;
 
     public function testInvokeWithEmptyContainer(): void
@@ -100,7 +100,7 @@ class PhpSessionFactoryTest extends TestCase
         $this->factory           = new PhpSessionFactory();
         $this->userRegister      = $this->createMock(UserRepositoryInterface::class);
         $this->responsePrototype = $this->createMock(ResponseInterface::class);
-        $this->responseFactory   = fn() => $this->responsePrototype;
+        $this->responseFactory   = fn(): ResponseInterface => $this->responsePrototype;
         $this->userFactory       = static fn(string $identity, array $roles = [], array $details = []): UserInterface
              => new DefaultUser($identity, $roles, $details);
     }

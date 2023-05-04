@@ -69,9 +69,6 @@
     <InternalMethod>
       <code>getResponseFactory</code>
     </InternalMethod>
-    <MissingClosureReturnType>
-      <code><![CDATA[fn() => $this->responsePrototype]]></code>
-    </MissingClosureReturnType>
     <MixedArgumentTypeCoercion>
       <code>$details</code>
       <code>$roles</code>
@@ -96,6 +93,9 @@
     <InternalMethod>
       <code>getResponseFromCallable</code>
     </InternalMethod>
+    <PossiblyUnusedMethod>
+      <code>configurationsWithOverriddenResponseInterfaceFactory</code>
+    </PossiblyUnusedMethod>
     <UndefinedClass>
       <code>ResponseFactoryFactory</code>
     </UndefinedClass>
