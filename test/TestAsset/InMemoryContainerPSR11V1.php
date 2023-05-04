@@ -43,9 +43,4 @@ final class InMemoryContainerPSR11V1 implements ContainerInterface
     {
         $this->services[$id] = $item;
     }
-
-    public function reset(): void
-    {
-        $this->services = [];
-    }
 }

@@ -19,7 +19,7 @@ class PhpSessionFactory
         $hasDeprecatedUserRepository = false;
         if (! $hasUserRepository) {
             $hasDeprecatedUserRepository = $container->has(
-                \Zend\Expressive\Authentication\UserRepositoryInterface::class
+                'Zend\Expressive\Authentication\UserRepositoryInterface'
             );
         }
         if (
@@ -42,7 +42,7 @@ class PhpSessionFactory
         $hasUser           = $container->has(UserInterface::class);
         $hasDeprecatedUser = false;
         if (! $hasUser) {
-            $hasDeprecatedUser = $container->has(\Zend\Expressive\Authentication\UserInterface::class);
+            $hasDeprecatedUser = $container->has('Zend\Expressive\Authentication\UserInterface');
         }
 
         if (
@@ -57,12 +57,12 @@ class PhpSessionFactory
         return new PhpSession(
             $hasUserRepository
                 ? $container->get(UserRepositoryInterface::class)
-                : $container->get(\Zend\Expressive\Authentication\UserRepositoryInterface::class),
+                : $container->get('Zend\Expressive\Authentication\UserRepositoryInterface'),
             $config,
             $this->detectResponseFactory($container),
             $hasUser
                 ? $container->get(UserInterface::class)
-                : $container->get(\Zend\Expressive\Authentication\UserInterface::class)
+                : $container->get('Zend\Expressive\Authentication\UserInterface')
         );
     }
 }

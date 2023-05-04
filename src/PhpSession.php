@@ -32,7 +32,7 @@ class PhpSession implements AuthenticationInterface
     private $userFactory;
 
     /**
-     * @param callable():ResponseInterface|ResponseFactoryInterface $responseFactory
+     * @param (callable():ResponseInterface)|ResponseFactoryInterface $responseFactory
      * @param callable(string, array, array): UserInterface $userFactory
      */
     public function __construct(
@@ -64,7 +64,7 @@ class PhpSession implements AuthenticationInterface
     public function authenticate(ServerRequestInterface $request): ?UserInterface
     {
         $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-        if (! $session) {
+        if (! $session instanceof SessionInterface) {
             throw Exception\MissingSessionContainerException::create();
         }
 

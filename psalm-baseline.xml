@@ -1,125 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.0.0@4e177bf0c9f03c17d2fbfd83b7cc9c47605274d8">
-  <file src="src/ConfigProvider.php">
-    <MixedArrayOffset occurrences="1"/>
-    <UndefinedClass occurrences="1">
-      <code>\Zend\Expressive\Authentication\Session\PhpSession</code>
-    </UndefinedClass>
-  </file>
+<files psalm-version="5.10.0@a5effd2d2dddd1a7ea7a0f6a051ce63ff979e356">
   <file src="src/PhpSession.php">
-    <DeprecatedClass occurrences="1"/>
-    <MixedArgument occurrences="4">
+    <DeprecatedClass>
+      <code><![CDATA[new CallableResponseFactoryDecorator(
+                static fn(): ResponseInterface => $responseFactory()
+            )]]></code>
+    </DeprecatedClass>
+    <MixedArgument>
       <code>$params[$password]</code>
       <code>$params[$username]</code>
-      <code>$session</code>
-      <code>$this-&gt;config['redirect']</code>
+      <code><![CDATA[$this->config['redirect']]]></code>
     </MixedArgument>
-    <MixedArrayOffset occurrences="2">
+    <MixedArrayOffset>
       <code>$params[$password]</code>
       <code>$params[$username]</code>
     </MixedArrayOffset>
-    <MixedArrayTypeCoercion occurrences="2">
+    <MixedArrayTypeCoercion>
       <code>$params[$password]</code>
       <code>$params[$username]</code>
     </MixedArrayTypeCoercion>
-    <MixedAssignment occurrences="5">
+    <MixedAssignment>
       <code>$details</code>
       <code>$password</code>
       <code>$roles</code>
-      <code>$session</code>
       <code>$username</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="1">
+    <MixedInferredReturnType>
       <code>?UserInterface</code>
     </MixedInferredReturnType>
-    <MixedMethodCall occurrences="3">
-      <code>has</code>
-      <code>regenerate</code>
-      <code>set</code>
-    </MixedMethodCall>
-    <MixedReturnStatement occurrences="2">
-      <code>($this-&gt;userFactory)($userInfo['username'], (array) $roles, (array) $details)</code>
-      <code>yield from $user-&gt;getRoles()</code>
+    <MixedReturnStatement>
+      <code><![CDATA[($this->userFactory)($userInfo['username'], (array) $roles, (array) $details)]]></code>
+      <code><![CDATA[yield from $user->getRoles()]]></code>
     </MixedReturnStatement>
   </file>
   <file src="src/PhpSessionFactory.php">
-    <DeprecatedTrait occurrences="1">
+    <DeprecatedTrait>
       <code>Psr17ResponseFactoryTrait</code>
     </DeprecatedTrait>
-    <MixedArgument occurrences="6">
-      <code>\Zend\Expressive\Authentication\UserInterface::class</code>
-      <code>\Zend\Expressive\Authentication\UserInterface::class</code>
-      <code>\Zend\Expressive\Authentication\UserRepositoryInterface::class</code>
-      <code>\Zend\Expressive\Authentication\UserRepositoryInterface::class</code>
+    <MixedArgument>
+      <code><![CDATA[$hasUser
+                ? $container->get(UserInterface::class)
+                : $container->get('Zend\Expressive\Authentication\UserInterface')]]></code>
+      <code><![CDATA[$hasUserRepository
+                ? $container->get(UserRepositoryInterface::class)
+                : $container->get('Zend\Expressive\Authentication\UserRepositoryInterface')]]></code>
     </MixedArgument>
-    <PossiblyInvalidArgument occurrences="1">
+    <PossiblyInvalidArgument>
       <code>$config</code>
     </PossiblyInvalidArgument>
-    <UndefinedClass occurrences="4">
-      <code>\Zend\Expressive\Authentication\UserInterface</code>
-      <code>\Zend\Expressive\Authentication\UserInterface</code>
-      <code>\Zend\Expressive\Authentication\UserRepositoryInterface</code>
-      <code>\Zend\Expressive\Authentication\UserRepositoryInterface</code>
-    </UndefinedClass>
   </file>
   <file src="src/Psr17ResponseFactoryTrait.php">
-    <DeprecatedClass occurrences="1">
+    <DeprecatedClass>
       <code>new CallableResponseFactoryDecorator($responseFactory)</code>
     </DeprecatedClass>
-    <InternalClass occurrences="1">
+    <InternalClass>
       <code>new CallableResponseFactoryDecorator($responseFactory)</code>
     </InternalClass>
-    <UndefinedClass occurrences="1">
+    <UndefinedClass>
       <code>ResponseFactoryFactory</code>
     </UndefinedClass>
   </file>
   <file src="test/ConfigProviderTest.php">
-    <RedundantCondition occurrences="1">
+    <RedundantCondition>
       <code>assertIsArray</code>
     </RedundantCondition>
   </file>
   <file src="test/PhpSessionFactoryTest.php">
-    <InternalMethod occurrences="1">
+    <InternalMethod>
       <code>getResponseFactory</code>
     </InternalMethod>
-    <MissingClosureReturnType occurrences="1">
-      <code>fn() =&gt; $this-&gt;responsePrototype</code>
+    <MissingClosureReturnType>
+      <code><![CDATA[fn() => $this->responsePrototype]]></code>
     </MissingClosureReturnType>
-    <MixedArgumentTypeCoercion occurrences="2">
+    <MixedArgumentTypeCoercion>
       <code>$details</code>
       <code>$roles</code>
     </MixedArgumentTypeCoercion>
-    <UndefinedInterfaceMethod occurrences="1">
+    <UndefinedInterfaceMethod>
       <code>getResponseFromCallable</code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="test/PhpSessionTest.php">
-    <MixedArgumentTypeCoercion occurrences="2">
+    <MixedArgumentTypeCoercion>
       <code>$details</code>
       <code>$roles</code>
     </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="1">
-      <code>$this-&gt;defaultConfig</code>
+    <MixedAssignment>
+      <code><![CDATA[$this->defaultConfig]]></code>
     </MixedAssignment>
   </file>
   <file src="test/Psr17ResponseFactoryTraitTest.php">
-    <DeprecatedClass occurrences="1">
+    <DeprecatedClass>
       <code>CallableResponseFactoryDecorator::class</code>
     </DeprecatedClass>
-    <InternalMethod occurrences="1">
+    <InternalMethod>
       <code>getResponseFromCallable</code>
     </InternalMethod>
-    <UndefinedClass occurrences="1">
+    <UndefinedClass>
       <code>ResponseFactoryFactory</code>
     </UndefinedClass>
   </file>
   <file src="test/TestAsset/InMemoryContainerPSR11V1.php">
-    <MethodSignatureMismatch occurrences="1">
+    <MethodSignatureMismatch>
       <code>InMemoryContainerPSR11V1</code>
     </MethodSignatureMismatch>
+    <PossiblyUnusedMethod>
+      <code>set</code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="test/TestAsset/Psr17ResponseFactoryTraitImplementation.php">
-    <DeprecatedTrait occurrences="1">
+    <DeprecatedTrait>
       <code>Psr17ResponseFactoryTrait</code>
     </DeprecatedTrait>
   </file>

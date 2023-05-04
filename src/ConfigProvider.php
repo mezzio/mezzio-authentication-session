@@ -27,7 +27,7 @@ class ConfigProvider
         return [
             // Legacy Zend Framework aliases
             'aliases'   => [
-                \Zend\Expressive\Authentication\Session\PhpSession::class => PhpSession::class,
+                'Zend\Expressive\Authentication\Session\PhpSession' => PhpSession::class,
             ],
             'factories' => [
                 PhpSession::class => PhpSessionFactory::class,
