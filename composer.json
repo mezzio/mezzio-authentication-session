@@ -37,7 +37,7 @@
         "mezzio/mezzio-session": "^1.6",
         "psr/container": "^1.0 || ^2.0",
         "psr/http-factory": "^1.0",
-        "psr/http-message": "^1.0.1",
+        "psr/http-message": "^1.0.1 || ^2.0.0",
         "webmozart/assert": "^1.10"
     },
     "require-dev": {
