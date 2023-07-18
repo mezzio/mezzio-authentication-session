@@ -37,15 +37,15 @@
         "mezzio/mezzio-session": "^1.6",
         "psr/container": "^1.0 || ^2.0",
         "psr/http-factory": "^1.0",
-        "psr/http-message": "^1.0.1",
+        "psr/http-message": "^1.0.1 || ^2.0.0",
         "webmozart/assert": "^1.10"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.5.0",
         "laminas/laminas-diactoros": "^3.0",
-        "phpunit/phpunit": "^10.1.2",
+        "phpunit/phpunit": "^10.2.6",
         "psalm/plugin-phpunit": "^0.18.4",
-        "vimeo/psalm": "^5.10"
+        "vimeo/psalm": "^5.13.1"
     },
     "autoload": {
         "psr-4": {
