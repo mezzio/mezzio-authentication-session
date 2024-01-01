@@ -140,7 +140,7 @@ class LoginHandler implements RequestHandlerInterface
             }
         }
 
-        return $redirect;
+        return (string)$redirect;
     }
 
     private function handleLoginAttempt(
