@@ -8,11 +8,13 @@
          displayDetailsOnTestsThatTriggerNotices="true"
          displayDetailsOnTestsThatTriggerErrors="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnPhpunitDeprecations="true"
          displayDetailsOnSkippedTests="true"
          displayDetailsOnIncompleteTests="true"
          failOnDeprecation="true"
          failOnNotice="true"
          failOnWarning="true"
+         failOnPhpunitDeprecation="true"
 >
     <testsuites>
         <testsuite name="mezzio-authentication-session">
