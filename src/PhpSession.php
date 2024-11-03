@@ -22,11 +22,7 @@ use function strtoupper;
 
 class PhpSession implements AuthenticationInterface
 {
-    private UserRepositoryInterface $repository;
-
-    private array $config;
-
-    private ResponseFactoryInterface $responseFactory;
+    private readonly ResponseFactoryInterface $responseFactory;
 
     /** @var callable */
     private $userFactory;
@@ -36,14 +32,11 @@ class PhpSession implements AuthenticationInterface
      * @param callable(string, array, array): UserInterface $userFactory
      */
     public function __construct(
-        UserRepositoryInterface $repository,
-        array $config,
+        private readonly UserRepositoryInterface $repository,
+        private array $config,
         $responseFactory,
         callable $userFactory
     ) {
-        $this->repository = $repository;
-        $this->config     = $config;
-
         if (is_callable($responseFactory)) {
             // Ensures type safety of the composed factory
             $responseFactory = new CallableResponseFactoryDecorator(
