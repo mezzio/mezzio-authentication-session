@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use mezziotest\authentication\session\testasset\inmemorycontainer;
 use MezzioTest\Authentication\Session\TestAsset\InMemoryContainerPSR11V1;
 use MezzioTest\Authentication\Session\TestAsset\InMemoryContainerPSR11V2;
 use Psr\Container\ContainerInterface;
@@ -13,7 +12,7 @@ use Psr\Container\ContainerInterface;
     $id     = array_shift($params);
     // phpcs:disable WebimpressCodingStandard.Formatting.StringClassReference.Found
     $id->hasType()
-        ? class_alias(InMemoryContainerPSR11V2::class, inmemorycontainer::class)
-        : class_alias(InMemoryContainerPSR11V1::class, inmemorycontainer::class);
+        ? class_alias(InMemoryContainerPSR11V2::class, 'MezzioTest\Authentication\Session\TestAsset\InMemoryContainer')
+        : class_alias(InMemoryContainerPSR11V1::class, 'MezzioTest\Authentication\Session\TestAsset\InMemoryContainer');
     // phpcs:enable WebimpressCodingStandard.Formatting.StringClassReference.Found
 })();
