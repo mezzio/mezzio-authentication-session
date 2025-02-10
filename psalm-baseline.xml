@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.10.0@a5effd2d2dddd1a7ea7a0f6a051ce63ff979e356">
+<files psalm-version="6.5.1@3f17a6b24a2dbe543e21408c2b19108cf6a355ef">
   <file src="src/PhpSession.php">
     <DeprecatedClass>
       <code><![CDATA[new CallableResponseFactoryDecorator(
@@ -7,27 +7,24 @@
             )]]></code>
     </DeprecatedClass>
     <MixedArgument>
-      <code>$params[$password]</code>
-      <code>$params[$username]</code>
+      <code><![CDATA[$params[$password]]]></code>
+      <code><![CDATA[$params[$username]]]></code>
       <code><![CDATA[$this->config['redirect']]]></code>
     </MixedArgument>
     <MixedArrayOffset>
-      <code>$params[$password]</code>
-      <code>$params[$username]</code>
+      <code><![CDATA[$params[$password]]]></code>
+      <code><![CDATA[$params[$username]]]></code>
     </MixedArrayOffset>
     <MixedArrayTypeCoercion>
-      <code>$params[$password]</code>
-      <code>$params[$username]</code>
+      <code><![CDATA[$params[$password]]]></code>
+      <code><![CDATA[$params[$username]]]></code>
     </MixedArrayTypeCoercion>
     <MixedAssignment>
-      <code>$details</code>
-      <code>$password</code>
-      <code>$roles</code>
-      <code>$username</code>
+      <code><![CDATA[$details]]></code>
+      <code><![CDATA[$password]]></code>
+      <code><![CDATA[$roles]]></code>
+      <code><![CDATA[$username]]></code>
     </MixedAssignment>
-    <MixedInferredReturnType>
-      <code>?UserInterface</code>
-    </MixedInferredReturnType>
     <MixedReturnStatement>
       <code><![CDATA[($this->userFactory)($userInfo['username'], (array) $roles, (array) $details)]]></code>
       <code><![CDATA[yield from $user->getRoles()]]></code>
@@ -35,7 +32,7 @@
   </file>
   <file src="src/PhpSessionFactory.php">
     <DeprecatedTrait>
-      <code>Psr17ResponseFactoryTrait</code>
+      <code><![CDATA[Psr17ResponseFactoryTrait]]></code>
     </DeprecatedTrait>
     <MixedArgument>
       <code><![CDATA[$hasUser
@@ -46,41 +43,41 @@
                 : $container->get('Zend\Expressive\Authentication\UserRepositoryInterface')]]></code>
     </MixedArgument>
     <PossiblyInvalidArgument>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
     </PossiblyInvalidArgument>
   </file>
   <file src="src/Psr17ResponseFactoryTrait.php">
     <DeprecatedClass>
-      <code>new CallableResponseFactoryDecorator($responseFactory)</code>
+      <code><![CDATA[new CallableResponseFactoryDecorator($responseFactory)]]></code>
     </DeprecatedClass>
     <InternalClass>
-      <code>new CallableResponseFactoryDecorator($responseFactory)</code>
+      <code><![CDATA[new CallableResponseFactoryDecorator($responseFactory)]]></code>
     </InternalClass>
     <UndefinedClass>
-      <code>ResponseFactoryFactory</code>
+      <code><![CDATA[ResponseFactoryFactory]]></code>
     </UndefinedClass>
   </file>
   <file src="test/ConfigProviderTest.php">
     <RedundantCondition>
-      <code>assertIsArray</code>
+      <code><![CDATA[assertIsArray]]></code>
     </RedundantCondition>
   </file>
   <file src="test/PhpSessionFactoryTest.php">
     <InternalMethod>
-      <code>getResponseFactory</code>
+      <code><![CDATA[getResponseFactory]]></code>
     </InternalMethod>
     <MixedArgumentTypeCoercion>
-      <code>$details</code>
-      <code>$roles</code>
+      <code><![CDATA[$details]]></code>
+      <code><![CDATA[$roles]]></code>
     </MixedArgumentTypeCoercion>
     <UndefinedInterfaceMethod>
-      <code>getResponseFromCallable</code>
+      <code><![CDATA[getResponseFromCallable]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="test/PhpSessionTest.php">
     <MixedArgumentTypeCoercion>
-      <code>$details</code>
-      <code>$roles</code>
+      <code><![CDATA[$details]]></code>
+      <code><![CDATA[$roles]]></code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$this->defaultConfig]]></code>
@@ -88,29 +85,29 @@
   </file>
   <file src="test/Psr17ResponseFactoryTraitTest.php">
     <DeprecatedClass>
-      <code>CallableResponseFactoryDecorator::class</code>
+      <code><![CDATA[CallableResponseFactoryDecorator::class]]></code>
     </DeprecatedClass>
     <InternalMethod>
-      <code>getResponseFromCallable</code>
+      <code><![CDATA[getResponseFromCallable]]></code>
     </InternalMethod>
     <PossiblyUnusedMethod>
-      <code>configurationsWithOverriddenResponseInterfaceFactory</code>
+      <code><![CDATA[configurationsWithOverriddenResponseInterfaceFactory]]></code>
     </PossiblyUnusedMethod>
     <UndefinedClass>
-      <code>ResponseFactoryFactory</code>
+      <code><![CDATA[ResponseFactoryFactory]]></code>
     </UndefinedClass>
   </file>
   <file src="test/TestAsset/InMemoryContainerPSR11V1.php">
     <MethodSignatureMismatch>
-      <code>InMemoryContainerPSR11V1</code>
+      <code><![CDATA[InMemoryContainerPSR11V1]]></code>
     </MethodSignatureMismatch>
     <PossiblyUnusedMethod>
-      <code>set</code>
+      <code><![CDATA[set]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/TestAsset/Psr17ResponseFactoryTraitImplementation.php">
     <DeprecatedTrait>
-      <code>Psr17ResponseFactoryTrait</code>
+      <code><![CDATA[Psr17ResponseFactoryTrait]]></code>
     </DeprecatedTrait>
   </file>
 </files>
