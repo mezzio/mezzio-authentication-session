@@ -10,6 +10,7 @@ use Psr\Container\ContainerInterface;
     $r      = new ReflectionMethod(ContainerInterface::class, 'has');
     $params = $r->getParameters();
     $id     = array_shift($params);
+    assert($id !== null);
     // phpcs:disable WebimpressCodingStandard.Formatting.StringClassReference.Found
     $id->hasType()
         ? class_alias(InMemoryContainerPSR11V2::class, 'MezzioTest\Authentication\Session\TestAsset\InMemoryContainer')
