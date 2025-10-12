@@ -4,24 +4,15 @@
          bootstrap="vendor/autoload.php"
          colors="true"
          cacheDirectory=".phpunit.cache"
-         displayDetailsOnTestsThatTriggerWarnings="true"
-         displayDetailsOnTestsThatTriggerNotices="true"
-         displayDetailsOnTestsThatTriggerErrors="true"
-         displayDetailsOnTestsThatTriggerDeprecations="true"
-         displayDetailsOnPhpunitDeprecations="true"
-         displayDetailsOnSkippedTests="true"
-         displayDetailsOnIncompleteTests="true"
-         failOnDeprecation="true"
-         failOnNotice="true"
-         failOnWarning="true"
-         failOnPhpunitDeprecation="true"
+         displayDetailsOnAllIssues="true"
+         failOnAllIssues="true"
 >
     <testsuites>
         <testsuite name="mezzio-authentication-session">
             <directory>./test</directory>
         </testsuite>
     </testsuites>
-    <source>
+    <source ignoreIndirectDeprecations="true">
         <include>
             <directory suffix=".php">./src</directory>
         </include>

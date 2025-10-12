@@ -17,7 +17,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class PhpSessionFactoryTest extends TestCase
+final class PhpSessionFactoryTest extends TestCase
 {
     /** @var ContainerInterface&MockObject */
     private $container;

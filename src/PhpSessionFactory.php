@@ -9,6 +9,7 @@ use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
+/** @final */
 class PhpSessionFactory
 {
     use Psr17ResponseFactoryTrait;

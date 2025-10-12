@@ -19,7 +19,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class PhpSessionTest extends TestCase
+final class PhpSessionTest extends TestCase
 {
     /** @var ServerRequestInterface&MockObject */
     private $request;
