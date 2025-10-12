@@ -20,6 +20,7 @@ use function is_callable;
 use function iterator_to_array;
 use function strtoupper;
 
+/** @final */
 class PhpSession implements AuthenticationInterface
 {
     private readonly ResponseFactoryInterface $responseFactory;

@@ -10,6 +10,7 @@ use RuntimeException;
 
 use function sprintf;
 
+/** @final */
 class MissingSessionContainerException extends RuntimeException implements ExceptionInterface
 {
     public static function create(): self
